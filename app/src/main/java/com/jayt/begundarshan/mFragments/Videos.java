@@ -17,6 +17,7 @@ import com.jayt.begundarshan.model.YoutubeVideo;
 
 public class Videos extends Fragment{
     View view;
+    public static final String API_KEY = "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70";
 
 
     // Recycler View Field
@@ -40,7 +41,9 @@ public class Videos extends Fragment{
         // Load video List but clear from earlier call
         youtubeVideos.clear();
 
-        youtubeVideos.add(new YoutubeVideo("<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/xplGGQq9zwE\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"));
+        youtubeVideos.add(new YoutubeVideo("AtkKzZYVz4U"));
+        youtubeVideos.add(new YoutubeVideo("xplGGQq9zwE"));
+        youtubeVideos.add(new YoutubeVideo("dHFzS2s-2Sg"));
 
         VideoAdapter videoAdapter = new VideoAdapter(getActivity(), youtubeVideos);
         recyclerView.setAdapter(videoAdapter);

@@ -26,11 +26,33 @@
             cardElevation="10dp"
             android:layout_gravity="center">
 
-            <WebView
-                android:id="@+id/videoWebView"
+            <com.google.android.youtube.player.YouTubeThumbnailView
+                android:id="@+id/youtube_thumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="240dp">
-            </WebView>
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:visibility="visible"/>
+
+            <RelativeLayout android:id="@+id/relativeLayout_over_youtube_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:gravity="center"
+                android:visibility="visible">
+                
+
+                <ImageView android:id="@+id/btnYoutube_player"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="center"
+                    android:src="@mipmap/ic_youtube_play_button"/>
+
+            </RelativeLayout>
+
+            <!--<WebView-->
+                <!--android:id="@+id/videoWebView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="240dp">-->
+            <!--</WebView>-->
 
         </android.support.v7.widget.CardView>
 
