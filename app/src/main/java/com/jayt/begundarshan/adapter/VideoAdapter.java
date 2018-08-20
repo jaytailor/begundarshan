@@ -108,6 +108,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_over_youtube_thumbnail);
             youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail);
 
+            Picasso.with(ctx)
+                    .load("http://img.youtube.com/vi/AtkKzZYVz4U/hqdefault.jpg").fit()
+                    .into(playButton);
+
         }
 
         @Override
@@ -118,7 +122,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                     youtubeVideos.get(getLayoutPosition()).getVideoUrl(),
                     100,     //after this time, video will start automatically
                     true,   //autoplay or not
-                    false);
+                    true);
 
             ctx.startActivity(intent);
         }
