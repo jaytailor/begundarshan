@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -26,12 +27,11 @@ import com.squareup.picasso.Picasso;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder>{
 
-    //these ids are the unique id for each video
-    String[] VideoID = {"AtkKzZYVz4U", "NkXBll2DpuQ", "dHFzS2s-2Sg"};
     Context ctx;
+    TextView videoTitle;
 
     List<YoutubeVideo> youtubeVideos;
-    YouTubePlayerView youTubePlayerView;
+    protected ImageView playButton;
 
 
     public VideoAdapter() {
@@ -49,6 +49,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public void onBindViewHolder(final VideoViewHolder holder, final int position) {
         //holder.videoMob.loadData( youtubeVideos.get(position).getVideoUrl(), "text/html" , "utf-8" );
+
+        videoTitle.setText(youtubeVideos.get(position).getTitle());
+
+        String fullVideoThumbnail = "http://img.youtube.com/vi/" +youtubeVideos.get(position).getUrl()+ "/hqdefault.jpg";
+        Picasso.with(ctx)
+                .load(fullVideoThumbnail).fit()
+                .into(playButton);
+
         final YouTubeThumbnailLoader.OnThumbnailLoadedListener  onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener(){
             @Override
             public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
@@ -66,7 +74,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
-                youTubeThumbnailLoader.setVideo(youtubeVideos.get(position).getVideoUrl());
+                youTubeThumbnailLoader.setVideo(youtubeVideos.get(position).getUrl());
                 youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
                 youTubeThumbnailLoader.release();
             }
@@ -88,8 +96,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public int getItemCount() {
-        //return youtubeVideos.size();
-        return VideoID.length;
+        return this.youtubeVideos.size();
+        //return VideoID.length;
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -97,34 +105,33 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         //WebView videoMob;
         protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
         YouTubeThumbnailView youTubeThumbnailView;
-        protected ImageView playButton;
-
 
         public VideoViewHolder(View itemView) {
 
             super(itemView);
-            playButton=(ImageView)itemView.findViewById(R.id.btnYoutube_player);
+            playButton = (ImageView)itemView.findViewById(R.id.btnYoutube_player);
+            videoTitle = (TextView) itemView.findViewById(R.id.videoTitle);
+
             playButton.setOnClickListener(this);
             relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.relativeLayout_over_youtube_thumbnail);
             youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.youtube_thumbnail);
-
-            Picasso.with(ctx)
-                    .load("http://img.youtube.com/vi/AtkKzZYVz4U/hqdefault.jpg").fit()
-                    .into(playButton);
 
         }
 
         @Override
         public void onClick(View v) {
 
-            Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx,
-                    "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70",
-                    youtubeVideos.get(getLayoutPosition()).getVideoUrl(),
-                    100,     //after this time, video will start automatically
-                    true,   //autoplay or not
-                    true);
+            if(getLayoutPosition() != -1){
+                Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx,
+                        "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70",
+                        youtubeVideos.get(getLayoutPosition()).getUrl(),
+                        100,     //after this time, video will start automatically
+                        true,   //autoplay or not
+                        true);
 
-            ctx.startActivity(intent);
+                ctx.startActivity(intent);
+            }
+
         }
     }
 }
