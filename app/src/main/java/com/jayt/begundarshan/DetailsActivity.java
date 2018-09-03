@@ -25,7 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         Intent intent = getIntent();
-
+        System.out.println("here 2");
         image = intent.getStringExtra("image");
         title = intent.getStringExtra("title");
         content = intent.getStringExtra("content");
@@ -51,7 +51,7 @@ public class DetailsActivity extends AppCompatActivity {
             content1.setText(content);
             writer1.setText(writer);
             publishedat1.setText(published_at);
-
+            System.out.println("here 3");
             if( image.equals("")){
                 // just load from static image
                 image1.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;

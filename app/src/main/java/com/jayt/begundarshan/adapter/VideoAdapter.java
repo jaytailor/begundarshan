@@ -34,16 +34,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     protected ImageView playButton;
 
 
-    public VideoAdapter() {
-    }
-
     public VideoAdapter(Context c, List<YoutubeVideo> youtubeVideos) {
         this.ctx = c;
         this.youtubeVideos = youtubeVideos;
-    }
-
-    public VideoAdapter(Context c) {
-        this.ctx = c;
     }
 
     @Override

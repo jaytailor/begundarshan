@@ -7,41 +7,48 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fillViewport="true">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/editorialView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/editorialtitle"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:padding="8dp"/>
+    </android.support.v7.widget.RecyclerView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/editorial"
-                android:textSize="16sp"/>
+    <!--<ScrollView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:fillViewport="true">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/editorialwriter"
-                android:textSize="18sp"
-                android:textColor="@color/colorPrimary"/>
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/editorialtitle"-->
+                <!--android:textSize="22sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:padding="8dp"/>-->
 
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/editorial"-->
+                <!--android:textSize="16sp"/>-->
 
-    </ScrollView>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/editorialwriter"-->
+                <!--android:textSize="18sp"-->
+                <!--android:textColor="@color/colorPrimary"/>-->
+
+        <!--</LinearLayout>-->
+
+    <!--</ScrollView>-->
 
 
 
