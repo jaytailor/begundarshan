@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.jayt.begundarshan.common.Endpoints;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -68,7 +69,7 @@ public class News extends Fragment {
             String urlParameters = "";
 
             try{
-                news = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallnews?list=20", urlParameters);
+                news = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
 
                 if(news == null){
                     Toast.makeText(getActivity(),"No news returned from server...",

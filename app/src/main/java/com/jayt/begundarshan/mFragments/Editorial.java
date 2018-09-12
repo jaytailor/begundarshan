@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.adapter.EditorialAdapter;
 import com.jayt.begundarshan.adapter.VideoAdapter;
+import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.YoutubeVideo;
@@ -63,7 +64,7 @@ public class Editorial extends Fragment{
 
             String urlParameters = "";
             try{
-                articles = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getalleditorial", urlParameters);
+                articles = Function.excuteGet(Endpoints.SERVER_URL+"getalleditorial", urlParameters);
 
                 if(articles == null){
                     Toast.makeText(getActivity(),"No Articles returned from server...Try after sometime...",

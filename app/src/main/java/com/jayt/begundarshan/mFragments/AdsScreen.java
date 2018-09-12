@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.adapter.AdsAdapter;
+import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.model.AdsList;
 
@@ -62,7 +63,7 @@ public class AdsScreen extends Fragment {
 
             String urlParameters = "";
             try{
-                ads = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallads", urlParameters);
+                ads = Function.excuteGet(Endpoints.SERVER_URL+"getallads", urlParameters);
 
                 if(ads == null){
                     Toast.makeText(getActivity(),"No Ads returned from server...Try after sometime...",

@@ -18,6 +18,7 @@ import java.util.Vector;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.adapter.AdsAdapter;
 import com.jayt.begundarshan.adapter.VideoAdapter;
+import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.YoutubeVideo;
@@ -62,7 +63,7 @@ public class Videos extends Fragment{
 
             String urlParameters = "";
             try{
-                videolist = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallvideos", urlParameters);
+                videolist = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
 
                 if(videolist == null){
                     Toast.makeText(getActivity(),"No Videos returned from server...Try after sometime...",
