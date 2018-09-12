@@ -111,7 +111,6 @@ public class CustomAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(c,title,Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(c, DetailsActivity.class);
                 i.putExtra("image", image);
                 i.putExtra("published_at", publishedat);

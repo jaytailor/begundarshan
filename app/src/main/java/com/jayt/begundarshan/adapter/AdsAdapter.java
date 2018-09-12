@@ -95,7 +95,7 @@ public class AdsAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(c,"Ad",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(c,"Ad",Toast.LENGTH_SHORT).show();
                 imagePopup.viewPopup();
 
             }
