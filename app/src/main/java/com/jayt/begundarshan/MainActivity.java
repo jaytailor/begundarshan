@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int width = size.x;
-        int height = size.y;
 
         // Whatsapp share
         ImageButton whatsapp = (ImageButton) findViewById(R.id.shareImageButton);
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TABLAYOUT
+        //TAB LAYOUT
         tabLayout= (TabLayout) findViewById(R.id.tablayoutid);
 
         //VIEWPAGER
@@ -101,43 +99,5 @@ public class MainActivity extends AppCompatActivity {
         //SET ADAPTER TO VP
         vp.setAdapter(pagerAdapter);
     }
-
-    public void onTabSelected(TabLayout.Tab tab) {
-        vp.setCurrentItem(tab.getPosition());
-    }
-
-//    private TabLayout tabLayout;
-//    private AppBarLayout appBarLayout;
-//    private ViewPager viewPager;
-//    public static AppCompatActivity act;
-//    ProgressBar loader;
-//    public static ListView listNews;
-//
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//
-//        tabLayout = (TabLayout) findViewById(R.id.tablayoutid);
-//        appBarLayout = (AppBarLayout) findViewById(R.id.appbarid);
-//        viewPager = (ViewPager) findViewById(R.id.viewpager_id);
-//        listNews = (ListView) findViewById(R.id.listNews);
-//        loader = (ProgressBar) findViewById(R.id.loader);
-//        listNews.setEmptyView(loader);
-//
-//        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-//
-//        // Adding the fragments
-//        viewPagerAdapter.AddFragment(new News(), "Read News");
-//        viewPagerAdapter.AddFragment(new BuySell(), "Buy or Sell");
-//        viewPagerAdapter.AddFragment(new AdsScreen(), "See an Ad");
-//        viewPagerAdapter.AddFragment(new Videos(), "Watch Videos");
-//
-//        // Adapter setup
-//        viewPager.setAdapter(viewPagerAdapter);
-//        tabLayout.setupWithViewPager(viewPager, true);
-//    }
-
 
 }

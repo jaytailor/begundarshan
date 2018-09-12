@@ -78,7 +78,6 @@ public class EditorialAdapter  extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            System.out.println("here 1");
             Intent i = new Intent(ctx, DetailsActivity.class);
             i.putExtra("published_at", articles.get(getLayoutPosition()).getEditorial_published_at());
             i.putExtra("title", articles.get(getLayoutPosition()).getEditorial_title());

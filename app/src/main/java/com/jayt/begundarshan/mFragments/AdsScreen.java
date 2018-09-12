@@ -63,7 +63,6 @@ public class AdsScreen extends Fragment {
             String urlParameters = "";
             try{
                 ads = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallads", urlParameters);
-                //ads = Function.excuteGet("http://34.233.126.33:5000/getresponse/aisehiads", urlParameters);
 
                 if(ads == null){
                     Toast.makeText(getActivity(),"No Ads returned from server...Try after sometime...",

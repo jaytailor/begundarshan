@@ -51,7 +51,7 @@ public class DetailsActivity extends AppCompatActivity {
             content1.setText(content);
             writer1.setText(writer);
             publishedat1.setText(published_at);
-            System.out.println("here 3");
+
             if( image.equals("")){
                 // just load from static image
                 image1.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
@@ -69,7 +69,9 @@ public class DetailsActivity extends AppCompatActivity {
                             .into(image1);
                 }
             }
-        }catch(Exception e) {}
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -73,7 +73,7 @@ public class Editorial extends Fragment{
                 if(articles.length()>10){ // Just checking if not empty
 
                     try {
-                        //Load video List but clear from earlier call
+                        //Load editorial List but clear from earlier call
                         articleList.clear();
 
                         JSONObject jsonResponse = new JSONObject(articles);
