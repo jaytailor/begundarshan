@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.jayt.begundarshan.common.Endpoints;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -30,9 +31,7 @@ import com.jayt.begundarshan.model.NewsItems;
 public class News extends Fragment {
 
     ArrayList<NewsItems> dataList = new ArrayList<NewsItems>();
-    ArrayList<AdsList> mainAdsList = new ArrayList<AdsList>();
     ListView listNews;
-    ImageView mainAdImage;
 
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -46,7 +45,6 @@ public class News extends Fragment {
         View rootView = inflater.inflate(R.layout.news, container, false);
 
         listNews = (ListView) rootView.findViewById(R.id.newsListView);
-        //mainAdImage = (ImageView) rootView.findViewById(R.id.ad_container);
 
         new DownloadNews().execute();
 
@@ -70,8 +68,7 @@ public class News extends Fragment {
             String urlParameters = "";
 
             try{
-                news = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallnews?list=20", urlParameters);
-                mainad = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallads", urlParameters);
+                news = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
 
                 if(news == null){
                     Toast.makeText(getActivity(),"No news returned from server...",
@@ -101,22 +98,6 @@ public class News extends Fragment {
                     }
                 }
 
-                if(mainad.length()>10){ // Just checking if not empty
-
-                    try {
-                        JSONObject jsonResponse = new JSONObject(mainad);
-                        JSONArray jsonArray = jsonResponse.optJSONArray("campaigns");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            AdsList adsitems = new AdsList();
-
-                            adsitems.setImageurl(jsonObject.getString("imageurl"));
-                            mainAdsList.add(i, adsitems);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
 
             }catch (RuntimeException e){
                 e.printStackTrace();
@@ -133,21 +114,6 @@ public class News extends Fragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-
-                    // Get the values from the adslist model
-                    //final String image = mainAdsList.get(0).getImageurl();
-//                    final String image = "https://imgur.com/paXUGf4.png";
-//
-//                    // If no url provided
-//                    if(image.length() < 5)
-//                    {
-//                        mainAdImage.setVisibility(View.GONE);
-//                        mainAdImage.setImageResource(R.drawable.lotushands);
-//                    }else{
-//                        Picasso.with(getActivity())
-//                                .load(image).fit().centerInside()
-//                                .into(mainAdImage);
-//                    }
 
                     CustomAdapter adapter = new CustomAdapter(getActivity(), dataList);
                     listNews.setAdapter(adapter);

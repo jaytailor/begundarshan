@@ -2,20 +2,44 @@ package com.jayt.begundarshan.model;
 
 public class YoutubeVideo {
 
-    String videoUrl;
+    String id;
+    String title;
+    String url;
+    String video_date;
+
 
     public YoutubeVideo() {
     }
 
-    public YoutubeVideo(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public String getId() {
+        return id;
     }
 
-    public String getVideoUrl() {
-        return videoUrl;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getVideo_date() {
+        return video_date;
+    }
+
+    public void setVideo_date(String video_date) {
+        this.video_date = video_date;
     }
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.adapter.AdsAdapter;
+import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.model.AdsList;
 
@@ -62,8 +63,7 @@ public class AdsScreen extends Fragment {
 
             String urlParameters = "";
             try{
-                ads = Function.excuteGet("http://ec2-52-52-28-14.us-west-1.compute.amazonaws.com:8080/getallads", urlParameters);
-                //ads = Function.excuteGet("http://34.233.126.33:5000/getresponse/aisehiads", urlParameters);
+                ads = Function.excuteGet(Endpoints.SERVER_URL+"getallads", urlParameters);
 
                 if(ads == null){
                     Toast.makeText(getActivity(),"No Ads returned from server...Try after sometime...",
@@ -73,6 +73,9 @@ public class AdsScreen extends Fragment {
                 if(ads.length()>10){ // Just checking if not empty
 
                     try {
+                        // Make sure to clear previously populated list of ads
+                        dataList.clear();
+
                         JSONObject jsonResponse = new JSONObject(ads);
                         JSONArray jsonArray = jsonResponse.optJSONArray("campaigns");
                         for (int i = 0; i < jsonArray.length(); i++) {

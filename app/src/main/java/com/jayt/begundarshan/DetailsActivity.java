@@ -25,7 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
 
         Intent intent = getIntent();
-
+        System.out.println("here 2");
         image = intent.getStringExtra("image");
         title = intent.getStringExtra("title");
         content = intent.getStringExtra("content");
@@ -52,16 +52,26 @@ public class DetailsActivity extends AppCompatActivity {
             writer1.setText(writer);
             publishedat1.setText(published_at);
 
-            if(image.length() < 5)
-            {
-                image1.setVisibility(View.GONE);
+            if( image == null || image.equals("")){
+                // just load from static image
+                image1.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
+                image1.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
+                image1.setImageResource(R.drawable.begundarshanlogo);
+
             }else{
-                Picasso.with(this)
-                        .load(image)
-                        .resize(300, 200)
-                        .into(image1);
+                if(image.length() < 5)
+                {
+                    image1.setVisibility(View.GONE);
+                }else{
+                    Picasso.with(this)
+                            .load(image)
+                            .resize(300, 200)
+                            .into(image1);
+                }
             }
-        }catch(Exception e) {}
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }

@@ -92,20 +92,25 @@ public class CustomAdapter extends BaseAdapter {
         content.setText(cont);
         published_at.setText(publishedat);
 
-        if(image.length() < 5)
-        {
-            newsImg.setVisibility(View.GONE);
+        // If there are no images associated with news then show a default image from drawables
+        if( image.equals("")){
+            newsImg.setImageResource(R.drawable.begundarshanlogo);
+
         }else{
-            Picasso.with(c)
-                    .load(image)
-                    .resize(300, 200)
-                    .into(newsImg);
+            if(image.length() < 5)
+            {
+                newsImg.setVisibility(View.GONE);
+            }else{
+                Picasso.with(c)
+                        .load(image)
+                        .resize(300, 200)
+                        .into(newsImg);
+            }
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(c,title,Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(c, DetailsActivity.class);
                 i.putExtra("image", image);
                 i.putExtra("published_at", publishedat);
