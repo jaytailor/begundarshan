@@ -20,6 +20,7 @@
             android:layout_gravity="start"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:maxLines="2"
             android:ellipsize="end"
             android:padding="8dp"/>
         <TextView
@@ -27,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:maxLines="4"
             android:padding="8dp"
             android:textSize="16sp"
             android:ellipsize="end"/>

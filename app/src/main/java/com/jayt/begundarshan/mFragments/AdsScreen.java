@@ -73,6 +73,9 @@ public class AdsScreen extends Fragment {
                 if(ads.length()>10){ // Just checking if not empty
 
                     try {
+                        // Make sure to clear previously populated list of ads
+                        dataList.clear();
+
                         JSONObject jsonResponse = new JSONObject(ads);
                         JSONArray jsonArray = jsonResponse.optJSONArray("campaigns");
                         for (int i = 0; i < jsonArray.length(); i++) {

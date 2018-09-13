@@ -52,7 +52,7 @@ public class DetailsActivity extends AppCompatActivity {
             writer1.setText(writer);
             publishedat1.setText(published_at);
 
-            if( image.equals("")){
+            if( image == null || image.equals("")){
                 // just load from static image
                 image1.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
                 image1.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);

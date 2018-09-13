@@ -41,7 +41,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     @Override
     public void onBindViewHolder(final VideoViewHolder holder, final int position) {
-        //holder.videoMob.loadData( youtubeVideos.get(position).getVideoUrl(), "text/html" , "utf-8" );
 
         videoTitle.setText(youtubeVideos.get(position).getTitle());
 
@@ -90,7 +89,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public int getItemCount() {
         return this.youtubeVideos.size();
-        //return VideoID.length;
     }
 
     public class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -99,7 +97,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
         YouTubeThumbnailView youTubeThumbnailView;
 
-        public VideoViewHolder(View itemView) {
+         VideoViewHolder(View itemView) {
 
             super(itemView);
             playButton = (ImageView)itemView.findViewById(R.id.btnYoutube_player);

@@ -64,8 +64,9 @@ public class EditorialAdapter  extends RecyclerView.Adapter {
 
     public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public ArticleViewHolder(View itemView) {
+         ArticleViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
 
             articleTitle = (TextView) itemView.findViewById(R.id.editorialTitle);
             articleContent = (TextView) itemView.findViewById(R.id.editorialContent1);
@@ -78,12 +79,12 @@ public class EditorialAdapter  extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(ctx, DetailsActivity.class);
-            i.putExtra("published_at", articles.get(getLayoutPosition()).getEditorial_published_at());
-            i.putExtra("title", articles.get(getLayoutPosition()).getEditorial_title());
-            i.putExtra("content", articles.get(getLayoutPosition()).getEditorial_content());
-            i.putExtra("writer", articles.get(getLayoutPosition()).getEditorial_writer());
-            ctx.startActivity(i);
+            Intent intent = new Intent(ctx, DetailsActivity.class);
+            intent.putExtra("published_at", articles.get(getLayoutPosition()).getEditorial_published_at());
+            intent.putExtra("title", articles.get(getLayoutPosition()).getEditorial_title());
+            intent.putExtra("content", articles.get(getLayoutPosition()).getEditorial_content());
+            intent.putExtra("writer", articles.get(getLayoutPosition()).getEditorial_writer());
+            ctx.startActivity(intent);
         }
     }
 

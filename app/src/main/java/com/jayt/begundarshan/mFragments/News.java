@@ -31,7 +31,6 @@ import com.jayt.begundarshan.model.NewsItems;
 public class News extends Fragment {
 
     ArrayList<NewsItems> dataList = new ArrayList<NewsItems>();
-    ArrayList<AdsList> mainAdsList = new ArrayList<AdsList>();
     ListView listNews;
 
     // Progress Dialog
