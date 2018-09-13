@@ -47,10 +47,10 @@
                     <ImageView
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:scaleType="center"
+                        android:scaleType="fitXY"
                         android:layout_centerInParent="true"
                         android:adjustViewBounds="true"
-                        android:src="@mipmap/ic_youtube_play_button"/>
+                        android:src="@drawable/youtube_play"/>
 
                 </RelativeLayout>
 
