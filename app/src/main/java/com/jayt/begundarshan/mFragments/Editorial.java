@@ -29,6 +29,7 @@ import java.util.Vector;
 public class Editorial extends Fragment{
 
     View view;
+
     // Recycler View Field
     RecyclerView recyclerView;
 

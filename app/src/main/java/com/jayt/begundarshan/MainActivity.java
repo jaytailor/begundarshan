@@ -1,5 +1,9 @@
 package com.jayt.begundarshan;
 
+/* COPYRIGHT
+   BegunDarshan
+ */
+
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -8,29 +12,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-
-import java.util.Vector;
-
-import com.jayt.begundarshan.adapter.VideoAdapter;
 import com.jayt.begundarshan.adapter.ViewPagerAdapter;
-import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.mFragments.AdsScreen;
-import com.jayt.begundarshan.mFragments.BuySell;
 import com.jayt.begundarshan.mFragments.Editorial;
 import com.jayt.begundarshan.mFragments.News;
 import com.jayt.begundarshan.mFragments.Videos;
-import com.jayt.begundarshan.model.YoutubeVideo;
 
 public class MainActivity extends AppCompatActivity {
 

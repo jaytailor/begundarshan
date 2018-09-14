@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,10 @@ import com.jayt.begundarshan.model.AdsList;
 
 public class AdsScreen extends Fragment {
     View view;
+
+    // Recycler View Field
+    RecyclerView adsRecyclerView;
+
     ArrayList<AdsList> dataList = new ArrayList<AdsList>();;
     ListView listAds;
 
@@ -41,7 +47,12 @@ public class AdsScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ads_screen, container, false);
-        listAds = (ListView) view.findViewById(R.id.adsListView);
+
+        adsRecyclerView = (RecyclerView) view.findViewById(R.id.adsRecyclerView);
+        adsRecyclerView.setHasFixedSize(true);
+        adsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //listAds = (ListView) view.findViewById(R.id.adsListView);
         new DownloadAds().execute();
         return view;
     }
@@ -106,7 +117,8 @@ public class AdsScreen extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     AdsAdapter adapter = new AdsAdapter(getActivity(), dataList);
-                    listAds.setAdapter(adapter);
+                    //listAds.setAdapter(adapter);
+                    adsRecyclerView.setAdapter(adapter);
 
                 }
             });
