@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.Vector;
 
 import com.jayt.begundarshan.R;
+import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.adapter.AdsAdapter;
 import com.jayt.begundarshan.adapter.VideoAdapter;
 import com.jayt.begundarshan.common.Endpoints;
@@ -32,9 +33,6 @@ public class Videos extends Fragment{
 
     // Recycler View Field
     RecyclerView recyclerView;
-
-    // Vector for video URL
-    Vector<YoutubeVideo> youtubeVideos = new Vector<YoutubeVideo>();
 
     public Videos() {
     }
@@ -61,41 +59,6 @@ public class Videos extends Fragment{
         protected String doInBackground(String... args) {
             String videolist = "";
 
-            String urlParameters = "";
-            try{
-                videolist = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
-
-                if(videolist == null){
-                    Toast.makeText(getActivity(),"No Videos returned from server...Try after sometime...",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                if(videolist.length()>10){ // Just checking if not empty
-
-                    try {
-                        //Load video List but clear from earlier call
-                        youtubeVideos.clear();
-
-                        JSONObject jsonResponse = new JSONObject(videolist);
-                        JSONArray jsonArray = jsonResponse.optJSONArray("video_list");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            YoutubeVideo video = new YoutubeVideo();
-
-                            video.setTitle(jsonObject.getString("title"));
-                            video.setUrl(jsonObject.getString("url"));
-                            video.setVideo_date(jsonObject.getString("video_date"));
-
-                            youtubeVideos.add(i, video);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }catch (RuntimeException e){
-                e.printStackTrace();
-            }
-
             return videolist;
         }
 
@@ -105,7 +68,7 @@ public class Videos extends Fragment{
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    VideoAdapter videoAdapter = new VideoAdapter(getActivity(), youtubeVideos);
+                    VideoAdapter videoAdapter = new VideoAdapter(getActivity(), SplashActivity.youtubeVideos);
                     recyclerView.setAdapter(videoAdapter);
                 }
             });

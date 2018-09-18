@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +32,13 @@ import com.jayt.begundarshan.model.NewsItems;
 
 public class News extends Fragment {
 
-    ArrayList<NewsItems> dataList = new ArrayList<NewsItems>();
-    ListView listNews;
+    ArrayList<NewsItems> newsList = new ArrayList<NewsItems>();
 
     // Progress Dialog
     private ProgressDialog pDialog;
+
+    // Recycler View Field
+    RecyclerView newsRecyclerView;
 
     public News() {
     }
@@ -44,7 +48,9 @@ public class News extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.news, container, false);
 
-        listNews = (ListView) rootView.findViewById(R.id.newsListView);
+        newsRecyclerView = (RecyclerView) rootView.findViewById(R.id.newsRecyclerView);
+        newsRecyclerView.setHasFixedSize(true);
+        newsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new DownloadNews().execute();
 
@@ -78,7 +84,7 @@ public class News extends Fragment {
                 if(news != null && news.length()>10){ // Just checking if not empty
 
                     try {
-                        dataList.clear();
+                        newsList.clear();
                         JSONObject jsonResponse = new JSONObject(news);
                         JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
                         for (int i = 0; i < jsonArray.length(); i++) {
@@ -91,7 +97,7 @@ public class News extends Fragment {
                             newsitems.setImage(jsonObject.getString("image"));
                             newsitems.setPublished_at(jsonObject.getString("published_at"));
                             newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
-                            dataList.add(i, newsitems);
+                            newsList.add(i, newsitems);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -115,17 +121,12 @@ public class News extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
 
-                    CustomAdapter adapter = new CustomAdapter(getActivity(), dataList);
-                    listNews.setAdapter(adapter);
+                    CustomAdapter adapter = new CustomAdapter(getActivity(), newsList);
+                    newsRecyclerView.setAdapter(adapter);
                 }
             });
         }
     }
 
-    @Override
-    public String toString() {
-        String title = "news";
-        return title;
-    }
 
 }

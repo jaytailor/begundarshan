@@ -19,10 +19,10 @@ import java.util.List;
 
 public class EditorialAdapter  extends RecyclerView.Adapter {
 
-    Context ctx;
-    List<EditorialModel> articles;
-    protected TextView articleTitle, articleContent, articleWriter, publishedDate;
-    protected ImageView articleImage;
+    private Context ctx;
+    private List<EditorialModel> articles;
+    private TextView articleTitle, articleContent, articleWriter, publishedDate;
+    private ImageView articleImage;
 
     public EditorialAdapter(Context ctx, List<EditorialModel> articles) {
         this.ctx = ctx;
@@ -58,8 +58,6 @@ public class EditorialAdapter  extends RecyclerView.Adapter {
                     .resize(300, 250)
                     .into(articleImage);
         }
-
-
     }
 
     public class ArticleViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
