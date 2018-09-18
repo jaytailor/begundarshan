@@ -27,11 +27,11 @@ import com.squareup.picasso.Picasso;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHolder>{
 
-    Context ctx;
-    TextView videoTitle;
+    private Context ctx;
+    private TextView videoTitle;
 
-    List<YoutubeVideo> youtubeVideos;
-    protected ImageView playButton;
+    private List<YoutubeVideo> youtubeVideos;
+    private ImageView playButton;
 
 
     public VideoAdapter(Context c, List<YoutubeVideo> youtubeVideos) {

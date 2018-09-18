@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import com.jayt.begundarshan.R;
+import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.adapter.AdsAdapter;
 import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
@@ -31,13 +32,6 @@ public class AdsScreen extends Fragment {
 
     // Recycler View Field
     RecyclerView adsRecyclerView;
-
-    ArrayList<AdsList> dataList = new ArrayList<AdsList>();;
-    ListView listAds;
-
-    // Progress Dialog
-    private ProgressDialog pDialog;
-
 
     public AdsScreen() {
 
@@ -52,7 +46,6 @@ public class AdsScreen extends Fragment {
         adsRecyclerView.setHasFixedSize(true);
         adsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //listAds = (ListView) view.findViewById(R.id.adsListView);
         new DownloadAds().execute();
         return view;
     }
@@ -62,61 +55,20 @@ public class AdsScreen extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading Ads ...");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-
         }
         protected String doInBackground(String... args) {
             String ads = "";
-
-            String urlParameters = "";
-            try{
-                ads = Function.excuteGet(Endpoints.SERVER_URL+"getallads", urlParameters);
-
-                if(ads == null){
-                    Toast.makeText(getActivity(),"No Ads returned from server...Try after sometime...",
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                if(ads.length()>10){ // Just checking if not empty
-
-                    try {
-                        // Make sure to clear previously populated list of ads
-                        dataList.clear();
-
-                        JSONObject jsonResponse = new JSONObject(ads);
-                        JSONArray jsonArray = jsonResponse.optJSONArray("campaigns");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            AdsList adsitems = new AdsList();
-
-                            adsitems.setImageurl(jsonObject.getString("imageurl"));
-
-                            dataList.add(i, adsitems);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }catch (RuntimeException e){
-                e.printStackTrace();
-            }
 
             return ads;
         }
 
         @Override
         protected void onPostExecute(String xml) {
-            // dismiss the dialog after getting all products
-            pDialog.dismiss();
 
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    AdsAdapter adapter = new AdsAdapter(getActivity(), dataList);
+                    AdsAdapter adapter = new AdsAdapter(getActivity(), SplashActivity.dataList);
                     //listAds.setAdapter(adapter);
                     adsRecyclerView.setAdapter(adapter);
 

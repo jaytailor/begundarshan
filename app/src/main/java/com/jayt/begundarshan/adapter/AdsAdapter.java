@@ -17,13 +17,13 @@ import com.jayt.begundarshan.model.AdsList;
 
 public class AdsAdapter extends RecyclerView.Adapter {
 
-    Context ctx;
-    ArrayList<AdsList> adslist;
-    String image;
-    ImagePopup imagePopup;
+    private Context ctx;
+    private ArrayList<AdsList> adslist;
+    private String image;
+    private ImagePopup imagePopup;
 
     // Get the image view
-    protected ImageView adsImg;
+    private ImageView adsImg;
 
     public AdsAdapter(Context c, ArrayList<AdsList> adslist) {
         this.ctx = c;

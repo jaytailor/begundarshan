@@ -23,6 +23,9 @@ import com.jayt.begundarshan.mFragments.AdsScreen;
 import com.jayt.begundarshan.mFragments.Editorial;
 import com.jayt.begundarshan.mFragments.News;
 import com.jayt.begundarshan.mFragments.Videos;
+import com.jayt.begundarshan.model.AdsList;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TAB LAYOUT
         tabLayout= (TabLayout) findViewById(R.id.tablayoutid);
+
 
         //VIEWPAGER
         vp= (ViewPager) findViewById(R.id.viewpager_id);
