@@ -69,7 +69,6 @@ public class AdsScreen extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     AdsAdapter adapter = new AdsAdapter(getActivity(), SplashActivity.dataList);
-                    //listAds.setAdapter(adapter);
                     adsRecyclerView.setAdapter(adapter);
 
                 }

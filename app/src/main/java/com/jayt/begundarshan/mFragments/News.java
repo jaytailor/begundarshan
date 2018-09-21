@@ -3,11 +3,13 @@ package com.jayt.begundarshan.mFragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.common.Endpoints;
+import com.jayt.begundarshan.interfaces.BaseModel;
+import com.jayt.begundarshan.model.Constants;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -31,8 +36,8 @@ import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.NewsItems;
 
 public class News extends Fragment {
-
-    ArrayList<NewsItems> newsList = new ArrayList<NewsItems>();
+    
+    ArrayList<BaseModel> newsList = new ArrayList<>();
 
     // Progress Dialog
     private ProgressDialog pDialog;
@@ -69,7 +74,7 @@ public class News extends Fragment {
 
         }
         protected String doInBackground(String... args) {
-            String news = "", mainad="";
+            String news = "";
 
             String urlParameters = "";
 
@@ -79,6 +84,7 @@ public class News extends Fragment {
                 if(news == null){
                     Toast.makeText(getActivity(),"No news returned from server...",
                             Toast.LENGTH_SHORT).show();
+                    Log.d("News.java: ","No news returned from server...");
                 }
 
                 if(news != null && news.length()>10){ // Just checking if not empty
@@ -98,12 +104,20 @@ public class News extends Fragment {
                             newsitems.setPublished_at(jsonObject.getString("published_at"));
                             newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
                             newsList.add(i, newsitems);
+
+                            // Only put ad (fetched from splash activity ads list) at first and 5th place
+                            if (i == 0){
+                                newsList.add(i, SplashActivity.dataList.get(0));
+                            }
+
+                            if (i == 5){
+                                newsList.add(i, SplashActivity.dataList.get(1));
+                            }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
-
 
             }catch (RuntimeException e){
                 e.printStackTrace();
@@ -120,7 +134,6 @@ public class News extends Fragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-
                     CustomAdapter adapter = new CustomAdapter(getActivity(), newsList);
                     newsRecyclerView.setAdapter(adapter);
                 }

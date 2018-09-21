@@ -1,6 +1,8 @@
 package com.jayt.begundarshan.model;
 
-public class NewsItems {
+import com.jayt.begundarshan.interfaces.BaseModel;
+
+public class NewsItems implements BaseModel {
 
     String id;
     String writer;
@@ -77,6 +79,11 @@ public class NewsItems {
 
     public void setPublished_at(String published_at) {
         this.published_at = published_at;
+    }
+
+    @Override
+    public int getViewType() {
+        return Constants.ViewType.NEWS_TYPE;
     }
 }
 
