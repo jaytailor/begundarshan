@@ -1,6 +1,10 @@
 package com.jayt.begundarshan.model;
 
-public class AdsList {
+import android.provider.SyncStateContract;
+
+import com.jayt.begundarshan.interfaces.BaseModel;
+
+public class AdsList implements BaseModel{
 
     String id;
     String imageurl;
@@ -58,6 +62,11 @@ public class AdsList {
 
     public void setExpired(String expired) {
         this.expired = expired;
+    }
+
+    @Override
+    public int getViewType() {
+        return Constants.ViewType.AD_TYPE;
     }
 
 }

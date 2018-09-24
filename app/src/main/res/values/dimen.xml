@@ -4,4 +4,6 @@
     <dimen name="imageview_height">110dp</dimen>
     <dimen name="detailimage_width">400dp</dimen>
     <dimen name="detailimage_height">350dp</dimen>
+    <dimen name="adimage_width">300dp</dimen>
+    <dimen name="adimage_height">250dp</dimen>
 </resources>
