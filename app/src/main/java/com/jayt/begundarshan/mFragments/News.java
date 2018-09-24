@@ -36,7 +36,7 @@ import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.NewsItems;
 
 public class News extends Fragment {
-    
+
     ArrayList<BaseModel> newsList = new ArrayList<>();
 
     // Progress Dialog
@@ -106,12 +106,14 @@ public class News extends Fragment {
                             newsList.add(i, newsitems);
 
                             // Only put ad (fetched from splash activity ads list) at first and 5th place
-                            if (i == 0){
-                                newsList.add(i, SplashActivity.dataList.get(0));
-                            }
+                            if (SplashActivity.topAdsList.size() >= 2){
+                                if (i == 0){
+                                    newsList.add(i, SplashActivity.topAdsList.get(0));
+                                }
 
-                            if (i == 5){
-                                newsList.add(i, SplashActivity.dataList.get(1));
+                                if (i == 5){
+                                    newsList.add(i, SplashActivity.topAdsList.get(1));
+                                }
                             }
                         }
                     } catch (JSONException e) {

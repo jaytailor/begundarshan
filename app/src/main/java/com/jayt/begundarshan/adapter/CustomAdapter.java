@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.app.Fragment;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
 import com.jayt.begundarshan.SplashActivity;
@@ -48,7 +50,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        System.out.println(viewType);
+
         switch (viewType) {
             case Constants.ViewType.NEWS_TYPE:
                 return new NewsViewHolder(mInflator.inflate(R.layout.news_items, parent, false));
@@ -101,7 +103,17 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             // Check if it is a breaking news
             final String title;
-            if(newsObject.getIs_breaking().equals("true")){
+
+            // In case i want to fix it for day later
+//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            LocalDateTime now = LocalDateTime.now();
+//            System.out.println(dtf.format(now));
+//
+//            String var = "2018-09-24T21:54:21.858Z";
+//            boolean isFound = var.contains(dtf.format(now));
+//            System.out.println(isFound);
+
+            if(newsObject.getIs_breaking().equals("true") ){
                 title = "ब्रेकिंग न्यूज़: " + newsObject.getTitle();;
             }else{
                 title = newsObject.getTitle();

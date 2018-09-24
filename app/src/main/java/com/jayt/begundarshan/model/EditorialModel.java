@@ -1,6 +1,8 @@
 package com.jayt.begundarshan.model;
 
-public class EditorialModel {
+import com.jayt.begundarshan.interfaces.BaseModel;
+
+public class EditorialModel implements BaseModel{
     String id;
     String editorial_title;
     String editorial_content;
@@ -58,5 +60,10 @@ public class EditorialModel {
 
     public void setEditorial_published_at(String editorial_published_at) {
         this.editorial_published_at = editorial_published_at;
+    }
+
+    @Override
+    public int getViewType() {
+        return Constants.ViewType.EDITORIAL_TYPE;
     }
 }
