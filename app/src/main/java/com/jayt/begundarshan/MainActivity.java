@@ -19,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.jayt.begundarshan.adapter.ViewPagerAdapter;
+import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.mFragments.AdsScreen;
 import com.jayt.begundarshan.mFragments.Editorial;
 import com.jayt.begundarshan.mFragments.News;
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Whatsapp share
         ImageButton whatsapp = (ImageButton) findViewById(R.id.shareImageButton);
+
+        // Check if internet is available
+        if (!Function.isNetworkAvailable(this)){
+            Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT)
+                    .show();
+        }
 
 
         whatsapp.setOnClickListener(new View.OnClickListener() {

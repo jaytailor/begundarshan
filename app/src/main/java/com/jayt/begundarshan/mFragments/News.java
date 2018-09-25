@@ -7,6 +7,7 @@ import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -37,10 +38,11 @@ import com.jayt.begundarshan.model.NewsItems;
 
 public class News extends Fragment {
 
-    ArrayList<BaseModel> newsList = new ArrayList<>();
-
     // Progress Dialog
     private ProgressDialog pDialog;
+
+    // swipe up to refresh
+    private SwipeRefreshLayout swipeContainer;
 
     // Recycler View Field
     RecyclerView newsRecyclerView;
@@ -57,7 +59,27 @@ public class News extends Fragment {
         newsRecyclerView.setHasFixedSize(true);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new DownloadNews().execute();
+        new DownloadNews().execute("norefresh");
+
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.newsSwipeContainer);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                new DownloadNews().execute("refresh");
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         return rootView;
     }
@@ -76,50 +98,12 @@ public class News extends Fragment {
         protected String doInBackground(String... args) {
             String news = "";
 
-            String urlParameters = "";
-
             try{
-                news = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
+                // if called on pull to refresh
+                if(args[0].equals("refresh"))
+                    Function.loadNews();
 
-                if(news == null){
-                    Toast.makeText(getActivity(),"No news returned from server...",
-                            Toast.LENGTH_SHORT).show();
-                    Log.d("News.java: ","No news returned from server...");
-                }
-
-                if(news != null && news.length()>10){ // Just checking if not empty
-
-                    try {
-                        newsList.clear();
-                        JSONObject jsonResponse = new JSONObject(news);
-                        JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            NewsItems newsitems = new NewsItems();
-
-                            newsitems.setTitle(jsonObject.getString("title"));
-                            newsitems.setContent(jsonObject.getString("content"));
-                            newsitems.setWriter(jsonObject.getString("writer"));
-                            newsitems.setImage(jsonObject.getString("image"));
-                            newsitems.setPublished_at(jsonObject.getString("published_at"));
-                            newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
-                            newsList.add(i, newsitems);
-
-                            // Only put ad (fetched from splash activity ads list) at first and 5th place
-                            if (SplashActivity.topAdsList.size() >= 2){
-                                if (i == 0){
-                                    newsList.add(i, SplashActivity.topAdsList.get(0));
-                                }
-
-                                if (i == 5){
-                                    newsList.add(i, SplashActivity.topAdsList.get(1));
-                                }
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+                return args[0];
 
             }catch (RuntimeException e){
                 e.printStackTrace();
@@ -131,12 +115,19 @@ public class News extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String xml) {
+        protected void onPostExecute(String response) {
+
+            // Now we call setRefreshing(false) to signal refresh has finished
+            if(response.equals("refresh"))
+                swipeContainer.setRefreshing(false);
+            else
+                // dismiss the dialog after getting all products
+                pDialog.dismiss();
 
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    CustomAdapter adapter = new CustomAdapter(getActivity(), newsList);
+                    CustomAdapter adapter = new CustomAdapter(getActivity(), SplashActivity.newsList);
                     newsRecyclerView.setAdapter(adapter);
                 }
             });

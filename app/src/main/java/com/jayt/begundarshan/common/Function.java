@@ -3,6 +3,17 @@ package com.jayt.begundarshan.common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.jayt.begundarshan.SplashActivity;
+import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.EditorialModel;
+import com.jayt.begundarshan.model.NewsItems;
+import com.jayt.begundarshan.model.YoutubeVideo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -28,7 +39,6 @@ public class Function {
             //connection.setRequestMethod("POST");
             //connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("content-type", "application/json;  charset=utf-8");
-
             connection.setRequestProperty("Content-Language", "en-US");
 
             connection.setUseCaches (false);
@@ -66,4 +76,181 @@ public class Function {
         }
     }
 
+    public static String loadArticles(){
+
+        String articleResponse = "";
+        String urlParameters = "";
+
+        try{
+            articleResponse = Function.excuteGet(Endpoints.SERVER_URL+"getalleditorial", urlParameters);
+
+            if(articleResponse != null && articleResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    //Load editorial List but clear from earlier call
+                    SplashActivity.articleList.clear();
+
+                    JSONObject jsonResponse = new JSONObject(articleResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("article_list");
+
+                    // only proceed if article are returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            EditorialModel article = new EditorialModel();
+
+                            article.setEditorial_title(jsonObject.getString("title"));
+                            article.setEditorial_content(jsonObject.getString("content"));
+                            article.setEditorial_writer(jsonObject.getString("writer"));
+                            article.setEditorial_image(jsonObject.getString("image"));
+                            article.setEditorial_published_at(jsonObject.getString("published_at"));
+
+                            SplashActivity.articleList.add(i, article);
+
+                            // Add an ad at 2nd position
+                            if (SplashActivity.orderedAdList.size() >= 2){
+                                if (i == 0){
+                                    SplashActivity.articleList.add(i, SplashActivity.orderedAdList.get(0));
+                                }
+
+                                if (i == 2){
+                                    SplashActivity.articleList.add(i, SplashActivity.orderedAdList.get(1));
+                                }
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+        return articleResponse;
+    }
+
+    public static String loadVideos(){
+        String videoResponse = "", urlParameters = "";
+
+        try{
+            videoResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
+
+            if(videoResponse != null && videoResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    //Load video List but clear from earlier call
+                    SplashActivity.youtubeVideos.clear();
+
+                    JSONObject jsonResponse = new JSONObject(videoResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("video_list");
+
+                    // only proceed if videos are returned
+                    if(jsonArray != null) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            YoutubeVideo video = new YoutubeVideo();
+
+                            video.setTitle(jsonObject.getString("title"));
+                            video.setUrl(jsonObject.getString("url"));
+                            video.setVideo_date(jsonObject.getString("video_date"));
+
+                            SplashActivity.youtubeVideos.add(i, video);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+        return videoResponse;
+    }
+
+    public static String loadAds(String route){
+        String adResponse = "", urlParameters = "";
+
+        try{
+            adResponse = Function.excuteGet(Endpoints.SERVER_URL+route, urlParameters);
+            if(adResponse != null && adResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of ads
+                    if(route.equals("ads"))
+                        SplashActivity.orderedAdList.clear(); // if ordered ads
+                    else
+                        SplashActivity.topAdsList.clear(); // if top ads for main page
+
+                    JSONObject jsonResponse = new JSONObject(adResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("campaigns");
+
+                    // only proceed if ads are returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            AdsList adsitems = new AdsList();
+
+                            adsitems.setImageurl(jsonObject.getString("imageurl"));
+                            adsitems.setPriority(jsonObject.getString("priority"));
+
+                            if(route.equals("ads"))
+                                // if ordered ads then ad in ordered ad list
+                                SplashActivity.orderedAdList.add(i, adsitems);
+                            else
+                                // if top ads for main page
+                                SplashActivity.topAdsList.add(i, adsitems);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace(); }
+
+        return adResponse;
+    }
+
+    public static String loadNews() {
+        String newsResponse = "", urlParameters = "";
+
+        newsResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
+
+        if(newsResponse != null && newsResponse.length()>10){ // Just checking if not empty
+
+            try {
+                SplashActivity.newsList.clear();
+                JSONObject jsonResponse = new JSONObject(newsResponse);
+                JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    NewsItems newsitems = new NewsItems();
+
+                    newsitems.setTitle(jsonObject.getString("title"));
+                    newsitems.setContent(jsonObject.getString("content"));
+                    newsitems.setWriter(jsonObject.getString("writer"));
+                    newsitems.setImage(jsonObject.getString("image"));
+                    newsitems.setPublished_at(jsonObject.getString("published_at"));
+                    newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
+                    SplashActivity.newsList.add(i, newsitems);
+
+                    // Only put ad (fetched from splash activity ads list) at first and 5th place
+                    if (SplashActivity.topAdsList.size() >= 2){
+                        if (i == 0){
+                            SplashActivity.newsList.add(i, SplashActivity.topAdsList.get(0));
+                        }
+
+                        if (i == 5){
+                            SplashActivity.newsList.add(i, SplashActivity.topAdsList.get(1));
+                        }
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return newsResponse;
+    }
 }

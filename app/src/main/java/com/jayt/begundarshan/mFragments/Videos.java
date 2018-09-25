@@ -46,7 +46,10 @@ public class Videos extends Fragment{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new GetVideoList().execute();
+        //new GetVideoList().execute();
+        VideoAdapter videoAdapter = new VideoAdapter(getActivity(), SplashActivity.youtubeVideos);
+        recyclerView.setAdapter(videoAdapter);
+
         return view;
     }
 

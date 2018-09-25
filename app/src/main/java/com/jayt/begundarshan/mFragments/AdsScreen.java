@@ -46,12 +46,13 @@ public class AdsScreen extends Fragment {
         adsRecyclerView.setHasFixedSize(true);
         adsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new DownloadAds().execute();
+        new ShowAds().execute("refresh");
+
         return view;
     }
 
 
-    class DownloadAds extends AsyncTask<String, Void, String> {
+    class ShowAds extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -68,7 +69,7 @@ public class AdsScreen extends Fragment {
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    AdsAdapter adapter = new AdsAdapter(getActivity(), SplashActivity.dataList);
+                    AdsAdapter adapter = new AdsAdapter(getActivity(), SplashActivity.orderedAdList);
                     adsRecyclerView.setAdapter(adapter);
 
                 }
