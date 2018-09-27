@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Function {
 
@@ -80,6 +81,7 @@ public class Function {
 
         String articleResponse = "";
         String urlParameters = "";
+        int numOfObj = 0;
 
         try{
             articleResponse = Function.excuteGet(Endpoints.SERVER_URL+"getalleditorial", urlParameters);
@@ -93,7 +95,12 @@ public class Function {
                     JSONObject jsonResponse = new JSONObject(articleResponse);
                     JSONArray jsonArray = jsonResponse.optJSONArray("article_list");
 
-                    // only proceed if article are returned
+                    if (SplashActivity.orderedAdList.size() >= 2) {
+                            SplashActivity.articleList.add(0, SplashActivity.orderedAdList.get(0));
+                            numOfObj++;
+                    }
+
+                        // only proceed if article are returned
                     if(jsonArray != null){
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -105,18 +112,13 @@ public class Function {
                             article.setEditorial_image(jsonObject.getString("image"));
                             article.setEditorial_published_at(jsonObject.getString("published_at"));
 
-                            SplashActivity.articleList.add(i, article);
+                            SplashActivity.articleList.add(numOfObj, article);
+                            numOfObj++;
+                        }
 
-                            // Add an ad at 2nd position
-                            if (SplashActivity.orderedAdList.size() >= 2){
-                                if (i == 0){
-                                    SplashActivity.articleList.add(i, SplashActivity.orderedAdList.get(0));
-                                }
-
-                                if (i == 2){
-                                    SplashActivity.articleList.add(i, SplashActivity.orderedAdList.get(1));
-                                }
-                            }
+                        if (SplashActivity.orderedAdList.size() >= 2) {
+                            SplashActivity.articleList.add(numOfObj, SplashActivity.orderedAdList.get(1));
+                            numOfObj++;
                         }
                     }
                 } catch (JSONException e) {
@@ -214,6 +216,7 @@ public class Function {
 
     public static String loadNews() {
         String newsResponse = "", urlParameters = "";
+        int numOfObj = 0;
 
         newsResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
 
@@ -223,31 +226,42 @@ public class Function {
                 SplashActivity.newsList.clear();
                 JSONObject jsonResponse = new JSONObject(newsResponse);
                 JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    NewsItems newsitems = new NewsItems();
 
+                // First insert the ads at first and fifth position
+                // But make sure not to add news at those indexes (0, 5)
+                if (SplashActivity.topAdsList.size() >= 2){
+                    SplashActivity.newsList.add(0, SplashActivity.topAdsList.get(0));
+                    numOfObj++;
+                }
+
+                // Start from one as already have ad at zero and insert news for next
+                // five places if news are more than five else run till the length of jsonArray
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    NewsItems newsitems = new NewsItems();
                     newsitems.setTitle(jsonObject.getString("title"));
                     newsitems.setContent(jsonObject.getString("content"));
                     newsitems.setWriter(jsonObject.getString("writer"));
                     newsitems.setImage(jsonObject.getString("image"));
                     newsitems.setPublished_at(jsonObject.getString("published_at"));
                     newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
-                    SplashActivity.newsList.add(i, newsitems);
-
-                    // Only put ad (fetched from splash activity ads list) at first and 5th place
-                    if (SplashActivity.topAdsList.size() >= 2){
-                        if (i == 0){
-                            SplashActivity.newsList.add(i, SplashActivity.topAdsList.get(0));
-                        }
-
-                        if (i == 5){
-                            SplashActivity.newsList.add(i, SplashActivity.topAdsList.get(1));
-                        }
-                    }
+                    SplashActivity.newsList.add(numOfObj, newsitems);
+                    numOfObj++;
                 }
+
+                // add an ad at the end
+                if (SplashActivity.topAdsList.size() >= 2) {
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.topAdsList.get(1));
+                }
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+            catch (ArrayIndexOutOfBoundsException ex){
+                ex.printStackTrace();
             }
         }
 

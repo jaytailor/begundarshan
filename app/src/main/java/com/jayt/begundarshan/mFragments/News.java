@@ -29,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.adapter.CustomAdapter;
@@ -129,6 +131,7 @@ public class News extends Fragment {
                 public void run() {
                     CustomAdapter adapter = new CustomAdapter(getActivity(), SplashActivity.newsList);
                     newsRecyclerView.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
                 }
             });
         }
