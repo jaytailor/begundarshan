@@ -181,7 +181,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             imagePopup.setHideCloseIcon(false);
             imagePopup.setImageOnClickClose(true);
             imagePopup.setKeepScreenOn(true);
-
         }
 
         @Override

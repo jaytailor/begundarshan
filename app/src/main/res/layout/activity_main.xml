@@ -18,6 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -49,6 +50,12 @@
                 android:layout_weight="0.4"
                 android:layout_gravity="bottom"
                 android:orientation="vertical">
+                <ImageButton
+                    android:id="@+id/questionMark"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/question" />
                 <ImageButton
                     android:id="@+id/shareImageButton"
                     android:layout_width="match_parent"

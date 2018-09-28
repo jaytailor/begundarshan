@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,6 +35,9 @@ public class Videos extends Fragment{
     // Recycler View Field
     RecyclerView recyclerView;
 
+    // swipe up to refresh
+    private SwipeRefreshLayout swipeContainer;
+
     public Videos() {
     }
 
@@ -46,7 +50,29 @@ public class Videos extends Fragment{
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new GetVideoList().execute();
+        new GetVideoList().execute("norefresh");
+
+        // Lookup the swipe container view
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.videoSwipeContainer);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                new GetVideoList().execute("refresh");
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
         return view;
     }
 
@@ -57,13 +83,19 @@ public class Videos extends Fragment{
         }
 
         protected String doInBackground(String... args) {
-            String videolist = "";
+            // if called on pull to refresh
+            if(args[0].equals("refresh"))
+                Function.loadVideos();
 
-            return videolist;
+            return args[0];
         }
 
         @Override
-        protected void onPostExecute(String xml) {
+        protected void onPostExecute(String response) {
+
+            // Now we call setRefreshing(false) to signal refresh has finished
+            if(response.equals("refresh"))
+                swipeContainer.setRefreshing(false);
 
             // updating UI from Background Thread
             getActivity().runOnUiThread(new Runnable() {

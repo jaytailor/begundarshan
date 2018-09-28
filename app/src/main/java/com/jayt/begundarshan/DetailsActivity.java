@@ -2,76 +2,117 @@ package com.jayt.begundarshan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 public class DetailsActivity extends AppCompatActivity {
     Context ctx;
-    ProgressBar loader;
     String image = "", title = "", content = "", writer="", published_at="";
 
+    public DetailsActivity(Context ctx, Object obj) {
+        this.ctx = ctx;
+    }
+
+    public DetailsActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        TextView titleView, contentView, writerView, publishedDateView;
+        ImageView newsImageView;
+
         Intent intent = getIntent();
-        System.out.println("here 2");
+
         image = intent.getStringExtra("image");
         title = intent.getStringExtra("title");
         content = intent.getStringExtra("content");
         writer = intent.getStringExtra("writer");
         published_at = intent.getStringExtra("published_at");
 
-        TextView title1 = (TextView) findViewById(R.id.title);
-        TextView content1 = (TextView) findViewById(R.id.content);
-        content1.setMovementMethod(new ScrollingMovementMethod());
+        // Get all views
+        titleView = (TextView) findViewById(R.id.title);
+        contentView = (TextView) findViewById(R.id.content);
+        contentView.setMovementMethod(new ScrollingMovementMethod());
 
-        ImageView image1 = (ImageView) findViewById(R.id.image);
-        TextView writer1 = (TextView) findViewById(R.id.detailWriter);
-        TextView publishedat1 = (TextView) findViewById(R.id.detailPublishedAt);
+        newsImageView = (ImageView) findViewById(R.id.image);
+        writerView = (TextView) findViewById(R.id.detailWriter);
+        publishedDateView = (TextView) findViewById(R.id.detailPublishedAt);
+
+        // Whatsapp share
+        ImageButton whatsapp = (ImageButton) findViewById(R.id.shareOnWhatsapp);
 
         // Change the layout if ad (will write code later for ad). or stretch image if title, content and writer are emptys
         if(writer.equals("") && title.equals("") && content.equals("") ){
-            image1.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);
-            image1.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
+            newsImageView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);
+            newsImageView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
         }
 
         try{
-            title1.setText(title);
-            content1.setText(content);
-            writer1.setText(writer);
-            publishedat1.setText(published_at);
+            titleView.setText(title);
+            contentView.setText(content);
+            writerView.setText(writer);
+            publishedDateView.setText(published_at);
 
             if( image == null || image.equals("")){
                 // just load from static image
-                image1.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
-                image1.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
-                image1.setImageResource(R.drawable.begundarshanlogo);
+                newsImageView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
+                newsImageView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
+                newsImageView.setImageResource(R.drawable.begundarshanlogo);
 
             }else{
                 if(image.length() < 5)
                 {
-                    image1.setVisibility(View.GONE);
+                    newsImageView.setVisibility(View.GONE);
                 }else{
                     Picasso.with(this)
                             .load(image)
-                            .resize(300, 200)
-                            .into(image1);
+                            .resize(300, 250)
+                            .into(newsImageView);
                 }
             }
         }catch(Exception e) {
             e.printStackTrace();
         }
+
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PackageManager pm=getPackageManager();
+
+                try {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    String whatsAppMessage = title + " : To read full news download Begun news App from " +
+                            "https://play.google.com/store/apps/details?id==com.jayt.begundarshan";
+                    sendIntent.setType("text/plain");
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, whatsAppMessage);
+
+                    // Do not forget to add this to open whatsApp App specifically
+                    PackageInfo info=pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(Intent.createChooser(sendIntent, "Share with"));
+
+                } catch (PackageManager.NameNotFoundException e) {
+                    Toast.makeText(DetailsActivity.this, "WhatsApp not Installed", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }
+        });
 
     }
 }
