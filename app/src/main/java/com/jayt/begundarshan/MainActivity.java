@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -128,9 +130,18 @@ public class MainActivity extends AppCompatActivity {
 
             // create a focusable PopupWindow with the given layout and correct size
             final PopupWindow pw = new PopupWindow(layout, (int)density*450, (int)density*450, true);
+            pw.setContentView(layout);
+            pw.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+            pw.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
 
             //Button to close the pop-up
             ((Button) layout.findViewById(R.id.popupClose)).setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    pw.dismiss();
+                }
+            });
+
+            ((ImageButton) layout.findViewById(R.id.topClose)).setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     pw.dismiss();
                 }
