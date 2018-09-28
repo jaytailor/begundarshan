@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_element"
+    android:layout_width="400dp"
+    android:layout_height="350dp"
+    android:background="@drawable/customborder">
+
+    <ImageView android:id="@+id/goldMedal"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/begundarshanlogo"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/importantInfo"
+        android:layout_alignTop="@+id/goldMedal"
+        android:layout_toEndOf="@+id/goldMedal"/>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:layout_below="@id/goldMedal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView android:id="@+id/goldName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="@string/rules"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <Button android:id="@+id/popupClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/closeButton" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

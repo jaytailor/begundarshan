@@ -8,13 +8,19 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -44,8 +50,9 @@ public class MainActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
 
-        // Whatsapp share
+        // Whatsapp share and question
         ImageButton whatsapp = (ImageButton) findViewById(R.id.shareImageButton);
+        ImageButton question = (ImageButton) findViewById(R.id.questionMark);
 
         // Check if internet is available
         if (!Function.isNetworkAvailable(this)){
@@ -77,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInfoPopup();
+            }
+        });
+
         //TAB LAYOUT
         tabLayout= (TabLayout) findViewById(R.id.tablayoutid);
 
@@ -101,6 +115,45 @@ public class MainActivity extends AppCompatActivity {
 
         //SET ADAPTER TO VP
         vp.setAdapter(pagerAdapter);
+    }
+
+    private void showInfoPopup(){
+        try{
+            //We need to get the instance of the LayoutInflater, use the context of this activity
+            LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.info_popup,null);
+
+            //Get the devices screen density to calculate correct pixel sizes
+            float density = getBaseContext().getResources().getDisplayMetrics().density;
+
+            // create a focusable PopupWindow with the given layout and correct size
+            final PopupWindow pw = new PopupWindow(layout, (int)density*450, (int)density*450, true);
+
+            //Button to close the pop-up
+            ((Button) layout.findViewById(R.id.popupClose)).setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    pw.dismiss();
+                }
+            });
+
+            //Set up touch closing outside of pop-up
+            pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            pw.setTouchInterceptor(new View.OnTouchListener() {
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                        pw.dismiss();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            pw.setOutsideTouchable(true);
+            // display the pop-up in the center
+            pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
     }
 
 }
