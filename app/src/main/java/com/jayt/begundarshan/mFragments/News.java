@@ -3,40 +3,22 @@ package com.jayt.begundarshan.mFragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.jayt.begundarshan.SplashActivity;
-import com.jayt.begundarshan.common.Endpoints;
-import com.jayt.begundarshan.interfaces.BaseModel;
-import com.jayt.begundarshan.model.Constants;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.adapter.CustomAdapter;
 import com.jayt.begundarshan.common.Function;
-import com.jayt.begundarshan.model.AdsList;
-import com.jayt.begundarshan.model.NewsItems;
+
 
 public class News extends Fragment {
 
@@ -131,10 +113,10 @@ public class News extends Fragment {
                 public void run() {
                     CustomAdapter adapter = new CustomAdapter(getActivity(), SplashActivity.newsList);
                     newsRecyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
                 }
             });
         }
+
     }
 
 

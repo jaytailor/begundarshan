@@ -7,28 +7,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.support.v4.app.Fragment;
-import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
-import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.Constants;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jayt.begundarshan.DetailsActivity;
-import com.jayt.begundarshan.MainActivity;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.model.NewsItems;
 
@@ -49,7 +40,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
 
         switch (viewType) {
             case Constants.ViewType.NEWS_TYPE:
@@ -77,12 +68,16 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseViewHolder holder, final int position) {
         holder.bind(mList.get(position));
+
+        // This is the mighty fix of the issue i was having
+        // where recycler view was updating the items on scroll.
+        holder.setIsRecyclable(false);
     }
 
     public class NewsViewHolder extends BaseViewHolder<NewsItems> implements View.OnClickListener{
-        NewsItems obj;
+        private NewsItems obj;
 
         NewsViewHolder(View itemView) {
             super(itemView);
