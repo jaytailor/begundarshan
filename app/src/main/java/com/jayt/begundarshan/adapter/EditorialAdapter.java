@@ -71,6 +71,8 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(BaseViewHolder holder, int position) {
         holder.bind(mList.get(position));
+
+        holder.setIsRecyclable(false);
     }
 
     public class ArticleViewHolder extends BaseViewHolder<EditorialModel> implements View.OnClickListener{
