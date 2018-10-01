@@ -53,6 +53,9 @@ public class Editorial extends Fragment{
 
         recyclerView = (RecyclerView) view.findViewById(R.id.editorialView);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new GetArticleList().execute("norefresh");
