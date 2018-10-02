@@ -41,7 +41,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public BaseViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-
         switch (viewType) {
             case Constants.ViewType.NEWS_TYPE:
                 return new NewsViewHolder(mInflator.inflate(R.layout.news_items, parent, false));
@@ -70,10 +69,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(final BaseViewHolder holder, final int position) {
         holder.bind(mList.get(position));
-
-        // This is the mighty fix of the issue i was having
-        // where recycler view was updating the items on scroll.
-        holder.setIsRecyclable(false);
     }
 
     public class NewsViewHolder extends BaseViewHolder<NewsItems> implements View.OnClickListener{

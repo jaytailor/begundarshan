@@ -45,12 +45,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final ScrollView mScrollView = (ScrollView) findViewById(R.id.scrollView);
-
-        // get screen size
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
 
         // Whatsapp share and question
         ImageButton whatsapp = (ImageButton) findViewById(R.id.shareImageButton);
@@ -66,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PackageManager pm=getPackageManager();
+                PackageManager pm = getPackageManager();
 
                 try {
                     Intent sendIntent = new Intent();
