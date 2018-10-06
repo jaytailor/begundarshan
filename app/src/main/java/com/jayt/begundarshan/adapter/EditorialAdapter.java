@@ -97,11 +97,11 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
             publishedDate.setText(article.getEditorial_published_at());
 
             // If no ad returned then set ad image view to false
-            if(article.getEditorial_image().equals("") || article.getEditorial_image() == null){
+            if(article.getEditorial_image().size() == 0 || article.getEditorial_image() == null){
                 articleImage.setVisibility(View.GONE);
             }else{
                 Picasso.with(ctx)
-                        .load(article.getEditorial_image())
+                        .load(article.getEditorial_image().get(0))
                         .resize(300, 250)
                         .into(articleImage);
             }
@@ -114,8 +114,9 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
             intent.putExtra("title", articleObj.getEditorial_title());
             intent.putExtra("content", articleObj.getEditorial_content());
             intent.putExtra("writer", articleObj.getEditorial_writer());
-            intent.putExtra("image", articleObj.getEditorial_image());
+            intent.putStringArrayListExtra("image", articleObj.getEditorial_image());
             ctx.startActivity(intent);
+
         }
     }
 

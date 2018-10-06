@@ -104,7 +104,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 //            System.out.println(isFound);
 
             if(newsObject.getIs_breaking().equals("true") ){
-                title = "ब्रेकिंग न्यूज़: " + newsObject.getTitle();;
+                title = "ब्रेकिंग न्यूज़: " + newsObject.getTitle();
             }else{
                 title = newsObject.getTitle();
             }
@@ -124,17 +124,17 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             published_at.setText(newsObject.getPublished_at());
 
             // If there are no images associated with news then show a default image from drawables
-
-            if( newsObject.getImage().equals("") || newsObject.getImage() == null){
+            if( newsObject.getImage() == null || newsObject.getImage().size() == 0){
                 newsImg.setImageResource(R.drawable.begundarshanlogo);
 
             }else{
 
-                if(newsObject.getImage().length() < 5)
+                if(newsObject.getImage().get(0).length() < 5)
                 {
                     newsImg.setVisibility(View.GONE);
                 }else{
-                    String image = newsObject.getImage();
+                    // get first news image and load that
+                    String image = newsObject.getImage().get(0);
                     Picasso.with(ctx)
                             .load(image)
                             .resize(300, 200)
@@ -145,13 +145,13 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
-            Intent i = new Intent(ctx, DetailsActivity.class);
-            i.putExtra("image", obj.getImage());
-            i.putExtra("published_at", obj.getPublished_at());
-            i.putExtra("title", obj.getTitle());
-            i.putExtra("content", obj.getContent());
-            i.putExtra("writer", obj.getWriter());
-            ctx.startActivity(i);
+            Intent intent = new Intent(ctx, DetailsActivity.class);
+            intent.putStringArrayListExtra("image", obj.getImage());
+            intent.putExtra("published_at", obj.getPublished_at());
+            intent.putExtra("title", obj.getTitle());
+            intent.putExtra("content", obj.getContent());
+            intent.putExtra("writer", obj.getWriter());
+            ctx.startActivity(intent);
         }
     }
 
