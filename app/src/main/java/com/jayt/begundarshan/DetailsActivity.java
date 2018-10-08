@@ -17,9 +17,13 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DetailsActivity extends AppCompatActivity {
     Context ctx;
-    String image = "", title = "", content = "", writer="", published_at="";
+    String title = "", content = "", writer="", published_at="";
+    ArrayList<String> image;
 
     public DetailsActivity(Context ctx, Object obj) {
         this.ctx = ctx;
@@ -38,7 +42,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        image = intent.getStringExtra("image");
+        image = intent.getStringArrayListExtra("image");
         title = intent.getStringExtra("title");
         content = intent.getStringExtra("content");
         writer = intent.getStringExtra("writer");
@@ -68,19 +72,22 @@ public class DetailsActivity extends AppCompatActivity {
             writerView.setText(writer);
             publishedDateView.setText(published_at);
 
-            if( image == null || image.equals("")){
+            if( image == null || image.size() == 0){
                 // just load from static image
                 newsImageView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
                 newsImageView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
                 newsImageView.setImageResource(R.drawable.begundarshanlogo);
 
             }else{
-                if(image.length() < 5)
+
+                // For now just show first image,
+                // later we will load all images in horizontal swipe
+                if(image.get(0).length() < 5)
                 {
                     newsImageView.setVisibility(View.GONE);
                 }else{
                     Picasso.with(this)
-                            .load(image)
+                            .load(image.get(0))
                             .resize(300, 250)
                             .into(newsImageView);
                 }

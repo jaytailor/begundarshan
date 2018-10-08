@@ -2,13 +2,15 @@ package com.jayt.begundarshan.model;
 
 import com.jayt.begundarshan.interfaces.BaseModel;
 
+import java.util.ArrayList;
+
 public class NewsItems implements BaseModel {
 
     String id;
     String writer;
     String title;
     String content;
-    String image;
+    ArrayList<String> image;
     String is_breaking;
     String published_at;
     String pushed_at;
@@ -16,14 +18,13 @@ public class NewsItems implements BaseModel {
     public NewsItems() {
     }
 
-    public NewsItems(String id, String writer, String title, String content, String image, String is_breaking, String published_at) {
-        this.id = id;
-        this.writer = writer;
-        this.title = title;
-        this.content = content;
+
+    public ArrayList<String> getImage() {
+        return image;
+    }
+
+    public void setImage(ArrayList<String> image) {
         this.image = image;
-        this.is_breaking = is_breaking;
-        this.published_at = published_at;
     }
 
     public String getId() {
@@ -42,9 +43,6 @@ public class NewsItems implements BaseModel {
         return content;
     }
 
-    public String getImage() {
-        return image;
-    }
 
     public String getIs_breaking() {
         return is_breaking;
@@ -70,9 +68,6 @@ public class NewsItems implements BaseModel {
         this.content = content;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public void setIs_breaking(String is_breaking) {
         this.is_breaking = is_breaking;

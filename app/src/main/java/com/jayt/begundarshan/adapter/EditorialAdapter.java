@@ -96,14 +96,19 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
             articleWriter.setText(article.getEditorial_writer());
             publishedDate.setText(article.getEditorial_published_at());
 
-            // If no ad returned then set ad image view to false
-            if(article.getEditorial_image().equals("") || article.getEditorial_image() == null){
-                articleImage.setVisibility(View.GONE);
-            }else{
-                Picasso.with(ctx)
-                        .load(article.getEditorial_image())
-                        .resize(300, 250)
-                        .into(articleImage);
+            // If there are no images associated with news then show a default image from drawables
+            if( article.getEditorial_image() == null || article.getEditorial_image().size() == 0){
+                articleImage.setImageResource(R.drawable.begundarshanlogo);
+
+            }else {
+                if (article.getEditorial_image().get(0).length() < 5) {
+                    articleImage.setVisibility(View.GONE);
+                } else {
+                    Picasso.with(ctx)
+                            .load(article.getEditorial_image().get(0))
+                            .resize(300, 250)
+                            .into(articleImage);
+                }
             }
         }
 
@@ -114,8 +119,9 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
             intent.putExtra("title", articleObj.getEditorial_title());
             intent.putExtra("content", articleObj.getEditorial_content());
             intent.putExtra("writer", articleObj.getEditorial_writer());
-            intent.putExtra("image", articleObj.getEditorial_image());
+            intent.putStringArrayListExtra("image", articleObj.getEditorial_image());
             ctx.startActivity(intent);
+
         }
     }
 

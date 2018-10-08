@@ -109,7 +109,19 @@ public class Function {
                             article.setEditorial_title(jsonObject.getString("title"));
                             article.setEditorial_content(jsonObject.getString("content"));
                             article.setEditorial_writer(jsonObject.getString("writer"));
-                            article.setEditorial_image(jsonObject.getString("image"));
+
+                            JSONArray imageArray = jsonObject.getJSONArray("image");
+                            if(imageArray != null) {
+                                ArrayList<String> listOfImages = new ArrayList<>();
+
+                                // Load all the images from the news
+                                for (int k = 0; k < imageArray.length(); k++) {
+                                    listOfImages.add(k, imageArray.getString(k));
+                                }
+
+                                article.setEditorial_image(listOfImages);
+                            }
+
                             article.setEditorial_published_at(jsonObject.getString("published_at"));
 
                             SplashActivity.articleList.add(numOfObj, article);
@@ -244,7 +256,18 @@ public class Function {
                     newsitems.setTitle(jsonObject.getString("title"));
                     newsitems.setContent(jsonObject.getString("content"));
                     newsitems.setWriter(jsonObject.getString("writer"));
-                    newsitems.setImage(jsonObject.getString("image"));
+
+                    JSONArray imageArray = jsonObject.getJSONArray("image");
+                    if(imageArray != null){
+                        ArrayList<String> listOfImages = new ArrayList<>();
+
+                        // Load all the images from the news
+                        for(int k = 0; k < imageArray.length(); k++){
+                            listOfImages.add(k, imageArray.getString(k));
+                        }
+                        newsitems.setImage(listOfImages);
+                    }
+
                     newsitems.setPublished_at(jsonObject.getString("published_at"));
                     newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
                     SplashActivity.newsList.add(numOfObj, newsitems);
