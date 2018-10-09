@@ -1,41 +1,36 @@
 package com.jayt.begundarshan;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailsActivity extends AppCompatActivity {
-    Context ctx;
+
     String title = "", content = "", writer="", published_at="";
     ArrayList<String> image;
 
-    public DetailsActivity(Context ctx, Object obj) {
-        this.ctx = ctx;
-    }
-
-    public DetailsActivity() {
-    }
+    private LinearLayout mGallery;
+    private LayoutInflater mInflater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        mInflater = LayoutInflater.from(this);
 
         TextView titleView, contentView, writerView, publishedDateView;
         ImageView newsImageView;
@@ -53,18 +48,13 @@ public class DetailsActivity extends AppCompatActivity {
         contentView = (TextView) findViewById(R.id.content);
         contentView.setMovementMethod(new ScrollingMovementMethod());
 
-        newsImageView = (ImageView) findViewById(R.id.image);
+        mGallery = (LinearLayout) findViewById(R.id.id_gallery);
+
         writerView = (TextView) findViewById(R.id.detailWriter);
         publishedDateView = (TextView) findViewById(R.id.detailPublishedAt);
 
         // Whatsapp share
         ImageButton whatsapp = (ImageButton) findViewById(R.id.shareOnWhatsapp);
-
-        // Change the layout if ad (will write code later for ad). or stretch image if title, content and writer are emptys
-        if(writer.equals("") && title.equals("") && content.equals("") ){
-            newsImageView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);
-            newsImageView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
-        }
 
         try{
             titleView.setText(title);
@@ -72,26 +62,46 @@ public class DetailsActivity extends AppCompatActivity {
             writerView.setText(writer);
             publishedDateView.setText(published_at);
 
+
             if( image == null || image.size() == 0){
+                View view = mInflater.inflate(R.layout.activity_gallery_item, mGallery, false);
+                newsImageView = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
+
                 // just load from static image
                 newsImageView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
                 newsImageView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
                 newsImageView.setImageResource(R.drawable.begundarshanlogo);
 
-            }else{
-
-                // For now just show first image,
-                // later we will load all images in horizontal swipe
-                if(image.get(0).length() < 5)
+                // add in gallery view
+                mGallery.addView(view);
+            }
+            else{
+                for (int i = 0; i < image.size(); i++)
                 {
-                    newsImageView.setVisibility(View.GONE);
-                }else{
-                    Picasso.with(this)
-                            .load(image.get(0))
-                            .resize(300, 250)
-                            .into(newsImageView);
+                    View view = mInflater.inflate(R.layout.activity_gallery_item, mGallery, false);
+                    newsImageView = (ImageView) view.findViewById(R.id.id_index_gallery_item_image);
+
+                    // For now just show first image,
+                    // later we will load all images in horizontal swipe
+                    if(image.get(0).length() < 5)
+                    {
+                        // just load from static image
+                        newsImageView.getLayoutParams().height = (int) getResources().getDimension(R.dimen.detailimage_height);;
+                        newsImageView.getLayoutParams().width = (int) getResources().getDimension(R.dimen.detailimage_width);
+                        newsImageView.setImageResource(R.drawable.begundarshanlogo);
+                    }else{
+                        Picasso.with(this)
+                                .load(image.get(i))
+                                .resize(300, 250).centerInside()
+                                .into(newsImageView);
+                    }
+
+                    // add in gallery view
+                    mGallery.addView(view);
                 }
             }
+
+
         }catch(Exception e) {
             e.printStackTrace();
         }
