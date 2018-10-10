@@ -13,6 +13,7 @@
             android:id="@+id/editorialImage"
             android:layout_width="110dp"
             android:layout_height="110dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/lotushands"
             android:padding="5dp"/>
         <LinearLayout
