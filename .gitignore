@@ -10,3 +10,4 @@
 .externalNativeBuild
 .idea/caches/
 /app/release
+.idea/misc.xml

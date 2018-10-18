@@ -3,11 +3,13 @@ package com.jayt.begundarshan.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
@@ -15,6 +17,7 @@ import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.Constants;
+import com.jayt.begundarshan.model.WishMessages;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -46,6 +49,8 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new NewsViewHolder(mInflator.inflate(R.layout.news_items, parent, false));
             case Constants.ViewType.AD_TYPE:
                 return new AdsViewHolder(mInflator.inflate(R.layout.news_page_ad, parent, false));
+            case Constants.ViewType.WISH_TYPE:
+                return new WishMessageViewHolder(mInflator.inflate(R.layout.wish_messages, parent, false));
         }
         return null;
     }
@@ -193,6 +198,49 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onClick(View v) {
             imagePopup.viewPopup();
         }
+    }
+
+    public class WishMessageViewHolder extends BaseViewHolder<WishMessages> implements View.OnClickListener{
+        LinearLayout mGallery;
+        View view;
+        ImageView wishMessageImage;
+        LayoutInflater mInflater;
+        TextView wishMessage;
+
+        WishMessageViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            mGallery = (LinearLayout) itemView.findViewById(R.id.id_wish_gallery);
+            mInflater = LayoutInflater.from(ctx);
+        }
+
+        @Override
+        public void bind(WishMessages object) {
+
+            for(int i = 0; i < 3; i++ ){
+                view = mInflater.inflate(R.layout.wish_items, mGallery, false);
+                wishMessageImage = (ImageView) view.findViewById(R.id.wishImage);
+                wishMessage = (TextView) view.findViewById(R.id.wishMessageText);
+                Picasso.with(ctx)
+                        .load("https://begundarshan.sgp1.digitaloceanspaces.com/logo/jogniyamata11.png")
+                        .resize(300, 250).centerInside()
+                        .into(wishMessageImage);
+
+                wishMessage.setText("Aap ko bahut bahut badhai ho ");
+
+                // add in gallery view
+                mGallery.addView(view);
+            }
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            imagePopup.viewPopup();
+        }
+
     }
 }
 

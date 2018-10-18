@@ -16,6 +16,7 @@ import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
+import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
 
 import org.json.JSONArray;
@@ -43,6 +44,10 @@ public class SplashActivity extends Activity {
     // List for ads
     public static ArrayList<AdsList> orderedAdList = new ArrayList<AdsList>();
     public static ArrayList<AdsList> topAdsList = new ArrayList<AdsList>();
+
+    // List for wish messages
+    public static ArrayList<WishMessages> wishList = new ArrayList<WishMessages>();
+
 
     public SplashActivity() {
     }

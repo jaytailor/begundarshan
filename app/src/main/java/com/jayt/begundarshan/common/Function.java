@@ -9,6 +9,7 @@ import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.NewsItems;
+import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
 
 import org.json.JSONArray;
@@ -273,6 +274,13 @@ public class Function {
                     SplashActivity.newsList.add(numOfObj, newsitems);
                     numOfObj++;
                 }
+
+                // add wish messages before showing final ad
+                WishMessages wishMessage = new WishMessages();
+                wishMessage.setImageurl("https://begundarshan.sgp1.digitaloceanspaces.com/logo/jogniyamata11.png");
+                wishMessage.setMessage("Congratulations!!");
+                SplashActivity.newsList.add(numOfObj, wishMessage);
+                numOfObj++;
 
                 // add an ad at the end
                 if (SplashActivity.topAdsList.size() >= 2) {
