@@ -115,7 +115,7 @@ public class DetailsActivity extends AppCompatActivity {
                     Intent sendIntent = new Intent();
                     sendIntent.setAction(Intent.ACTION_SEND);
                     String whatsAppMessage = title + " : To read full news download Begun news App from " +
-                            "https://play.google.com/store/apps/details?id==com.jayt.begundarshan";
+                            "https://play.google.com/store/apps/details?id=com.jayt.begundarshan";
                     sendIntent.setType("text/plain");
                     sendIntent.putExtra(Intent.EXTRA_TEXT, whatsAppMessage);
 
