@@ -48,6 +48,9 @@ public class AdsScreen extends Fragment {
 
         adsRecyclerView = (RecyclerView) view.findViewById(R.id.adsRecyclerView);
         adsRecyclerView.setHasFixedSize(true);
+        adsRecyclerView.setItemViewCacheSize(20);
+        adsRecyclerView.setDrawingCacheEnabled(true);
+        adsRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         adsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         new ShowAds().execute("norefresh");

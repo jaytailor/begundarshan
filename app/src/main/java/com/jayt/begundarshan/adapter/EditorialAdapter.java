@@ -105,8 +105,7 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
                     articleImage.setVisibility(View.GONE);
                 } else {
                     Picasso.with(ctx)
-                            .load(article.getEditorial_image().get(0))
-                            .resize(300, 250)
+                            .load(article.getEditorial_image().get(0)).fit()
                             .into(articleImage);
                 }
             }
@@ -153,8 +152,7 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
             }else{
                 String image = object.getImageurl();
                 Picasso.with(ctx)
-                        .load(image)
-                        .resize(300, 250)
+                        .load(image).fit()
                         .into(mainAd);
                 imagePopup.initiatePopupWithPicasso(image);
             }
@@ -162,7 +160,7 @@ public class EditorialAdapter  extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
-            imagePopup.viewPopup();
+            //imagePopup.viewPopup(); need to fix the issue of showing some other image
         }
     }
 }

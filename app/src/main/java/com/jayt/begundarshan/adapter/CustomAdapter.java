@@ -136,8 +136,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                     // get first news image and load that
                     String image = newsObject.getImage().get(0);
                     Picasso.with(ctx)
-                            .load(image)
-                            .resize(300, 200)
+                            .load(image).fit()
                             .into(newsImg);
                 }
             }
@@ -182,8 +181,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }else{
                 String image = object.getImageurl();
                 Picasso.with(ctx)
-                        .load(image)
-                        .resize(300, 250)
+                        .load(image).fit()
                         .into(mainAd);
                 imagePopup.initiatePopupWithPicasso(image);
             }
@@ -191,7 +189,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
-            imagePopup.viewPopup();
+            //imagePopup.viewPopup();
         }
     }
 }

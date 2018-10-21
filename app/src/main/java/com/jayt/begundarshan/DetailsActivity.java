@@ -91,8 +91,7 @@ public class DetailsActivity extends AppCompatActivity {
                         newsImageView.setImageResource(R.drawable.begundarshanlogo);
                     }else{
                         Picasso.with(this)
-                                .load(image.get(i))
-                                .resize(300, 250).centerInside()
+                                .load(image.get(i)).fit()
                                 .into(newsImageView);
                     }
 

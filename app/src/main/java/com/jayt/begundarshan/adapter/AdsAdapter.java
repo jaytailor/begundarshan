@@ -41,16 +41,15 @@ public class AdsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         image = adslist.get(position).getImageurl();
-
         if(image.length() < 5)
         {
             adsImg.setVisibility(View.GONE);
         }else{
             Picasso.with(ctx)
-                    .load(image)
-                    .resize(300, 250)
+                    .load(image).fit()
                     .into(adsImg);
         }
+
     }
 
     @Override
@@ -64,7 +63,7 @@ public class AdsAdapter extends RecyclerView.Adapter {
     }
 
     public class AdsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
+        ImagePopup imagePopup;
         AdsViewHolder(View itemView) {
             super(itemView);
 
@@ -78,14 +77,13 @@ public class AdsAdapter extends RecyclerView.Adapter {
             imagePopup.setHideCloseIcon(false);
             imagePopup.setImageOnClickClose(true);
             imagePopup.setKeepScreenOn(true);
-
             imagePopup.initiatePopupWithPicasso(image);
-        }
 
+        }
 
         @Override
         public void onClick(View v) {
-            imagePopup.viewPopup();
+            //imagePopup.viewPopup();
         }
     }
 }
