@@ -10,17 +10,18 @@ import android.view.ViewGroup;
 
 import com.jayt.begundarshan.R;
 
-public class BuySell extends Fragment {
+public class Information extends Fragment {
 
     View view;
 
-    public BuySell() {
+    public Information() {
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_buy_sell, container, false);
+        view = inflater.inflate(R.layout.information, container, false);
         return view;
     }
+
 }

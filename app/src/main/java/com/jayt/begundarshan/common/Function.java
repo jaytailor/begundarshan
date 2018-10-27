@@ -276,11 +276,11 @@ public class Function {
                 }
 
                 // add wish messages before showing final ad
-                WishMessages wishMessage = new WishMessages();
-                wishMessage.setImageurl("https://begundarshan.sgp1.digitaloceanspaces.com/logo/jogniyamata11.png");
-                wishMessage.setMessage("Congratulations!!");
-                SplashActivity.newsList.add(numOfObj, wishMessage);
-                numOfObj++;
+                if(SplashActivity.wishContainer != null){
+
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
+                    numOfObj++;
+                }
 
                 // add an ad at the end
                 if (SplashActivity.topAdsList.size() >= 2) {
@@ -297,5 +297,45 @@ public class Function {
         }
 
         return newsResponse;
+    }
+
+    public static String loadWishMessage(){
+        String wishesResponse = "";
+
+        try{
+            wishesResponse = Function.excuteGet("http://34.233.126.33:5000/getresponse/aisehi", "");
+            //wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
+            if(wishesResponse != null && wishesResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of wish message
+                    SplashActivity.wishMessages.clear();
+
+                    JSONObject jsonResponse = new JSONObject(wishesResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("messages");
+
+                    // only proceed if ads are returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            WishMessages message = new WishMessages();
+
+                            message.setImageurl(jsonObject.getString("imageurl"));
+                            message.setMessage(jsonObject.getString("message_text"));
+                            SplashActivity.wishMessages.add(i, message);
+                        }
+                    }
+
+                    // now make sure that you set it in parent wish messages list
+                    SplashActivity.wishContainer.setWishMessageList(SplashActivity.wishMessages);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace(); }
+
+        return wishesResponse;
     }
 }

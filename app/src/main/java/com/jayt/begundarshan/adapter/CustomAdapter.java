@@ -2,6 +2,7 @@ package com.jayt.begundarshan.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.Constants;
+import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.squareup.picasso.Picasso;
 
@@ -200,7 +202,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
     }
 
-    public class WishMessageViewHolder extends BaseViewHolder<WishMessages> implements View.OnClickListener{
+    public class WishMessageViewHolder extends BaseViewHolder<WishMessageParentModel> implements View.OnClickListener{
         LinearLayout mGallery;
         View view;
         ImageView wishMessageImage;
@@ -217,23 +219,34 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         }
 
         @Override
-        public void bind(WishMessages object) {
+        public void bind(WishMessageParentModel object) {
 
-            for(int i = 0; i < 3; i++ ){
-                view = mInflater.inflate(R.layout.wish_items, mGallery, false);
-                wishMessageImage = (ImageView) view.findViewById(R.id.wishImage);
-                wishMessage = (TextView) view.findViewById(R.id.wishMessageText);
-                Picasso.with(ctx)
-                        .load("https://begundarshan.sgp1.digitaloceanspaces.com/logo/jogniyamata11.png")
-                        .resize(300, 250).centerInside()
-                        .into(wishMessageImage);
+            // get the wish message parent object which has list of wish messages object
+            // traverse through that list and inflate a imageview for each and everyone.
+            try{
+                if(object != null) {
+                    for (int i = 0; i < object.getWishMessageList().size(); i++) {
+                        view = mInflater.inflate(R.layout.wish_items, mGallery, false);
+                        wishMessageImage = (ImageView) view.findViewById(R.id.wishImage);
+                        wishMessage = (TextView) view.findViewById(R.id.wishMessageText);
+                        Picasso.with(ctx)
+                                .load(object.getWishMessageList().get(i).getImageurl()).fit()
+                                .into(wishMessageImage);
 
-                wishMessage.setText("Aap ko bahut bahut badhai ho ");
+                        wishMessage.setText(object.getWishMessageList().get(i).getMessage());
 
-                // add in gallery view
-                mGallery.addView(view);
+                        // add in gallery view
+                        if (view.getParent() != null)
+                            ((ViewGroup) view.getParent()).removeView(view); // <- fix
+
+                        mGallery.addView(view);
+
+                    }
+                }
             }
-
+            catch(NullPointerException ex){
+                ex.printStackTrace();
+            }
         }
 
         @Override

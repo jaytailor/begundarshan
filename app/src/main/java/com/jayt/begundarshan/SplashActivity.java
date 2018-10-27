@@ -16,6 +16,7 @@ import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
+import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
 
@@ -46,7 +47,8 @@ public class SplashActivity extends Activity {
     public static ArrayList<AdsList> topAdsList = new ArrayList<AdsList>();
 
     // List for wish messages
-    public static ArrayList<WishMessages> wishList = new ArrayList<WishMessages>();
+    public static ArrayList<WishMessages> wishMessages = new ArrayList<WishMessages>();
+    public static WishMessageParentModel wishContainer = new WishMessageParentModel();
 
 
     public SplashActivity() {
@@ -90,6 +92,9 @@ public class SplashActivity extends Activity {
 
                 // Load top ads for main news page
                 Function.loadAds("topads?priority=5");
+
+                // Load wish messages
+                Function.loadWishMessage();
 
                 // Load news now
                 Function.loadNews();

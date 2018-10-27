@@ -2,7 +2,7 @@ package com.jayt.begundarshan.model;
 
 import com.jayt.begundarshan.interfaces.BaseModel;
 
-public class WishMessages implements BaseModel {
+public class WishMessages{
 
     String id;
     String imageurl;
@@ -53,8 +53,4 @@ public class WishMessages implements BaseModel {
         this.message = message;
     }
 
-    @Override
-    public int getViewType() {
-        return Constants.ViewType.WISH_TYPE;
-    }
 }
