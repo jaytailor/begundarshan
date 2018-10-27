@@ -6,7 +6,7 @@ android {
         applicationId "com.jayt.begundarshan"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 14
+        versionCode 16
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
