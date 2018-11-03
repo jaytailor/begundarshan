@@ -231,7 +231,7 @@ public class Function {
         String newsResponse = "", urlParameters = "";
         int numOfObj = 0;
 
-        newsResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
+        newsResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=15", urlParameters);
 
         if(newsResponse != null && newsResponse.length()>10){ // Just checking if not empty
 
@@ -303,8 +303,7 @@ public class Function {
         String wishesResponse = "";
 
         try{
-            wishesResponse = Function.excuteGet("http://34.233.126.33:5000/getresponse/aisehi", "");
-            //wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
+            wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
             if(wishesResponse != null && wishesResponse.length()>10){ // Just checking if not empty
 
                 try {

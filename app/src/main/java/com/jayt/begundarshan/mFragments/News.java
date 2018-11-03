@@ -41,7 +41,7 @@ public class News extends Fragment {
 
         newsRecyclerView = (RecyclerView) rootView.findViewById(R.id.newsRecyclerView);
         newsRecyclerView.setHasFixedSize(true);
-        newsRecyclerView.setItemViewCacheSize(20);
+        newsRecyclerView.setItemViewCacheSize(15);
         newsRecyclerView.setDrawingCacheEnabled(true);
         newsRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         newsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
