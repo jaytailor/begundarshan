@@ -14,7 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:textColor="@color/colorPrimary"
-            android:text="बेगूँ शहर "
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"/>

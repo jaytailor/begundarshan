@@ -9,6 +9,7 @@ import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.NewsItems;
+import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
 
 import org.json.JSONArray;
@@ -230,7 +231,7 @@ public class Function {
         String newsResponse = "", urlParameters = "";
         int numOfObj = 0;
 
-        newsResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=20", urlParameters);
+        newsResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=15", urlParameters);
 
         if(newsResponse != null && newsResponse.length()>10){ // Just checking if not empty
 
@@ -274,6 +275,13 @@ public class Function {
                     numOfObj++;
                 }
 
+                // add wish messages before showing final ad
+                if(SplashActivity.wishContainer != null){
+
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
+                    numOfObj++;
+                }
+
                 // add an ad at the end
                 if (SplashActivity.topAdsList.size() >= 2) {
                     SplashActivity.newsList.add(numOfObj, SplashActivity.topAdsList.get(1));
@@ -289,5 +297,44 @@ public class Function {
         }
 
         return newsResponse;
+    }
+
+    public static String loadWishMessage(){
+        String wishesResponse = "";
+
+        try{
+            wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
+            if(wishesResponse != null && wishesResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of wish message
+                    SplashActivity.wishMessages.clear();
+
+                    JSONObject jsonResponse = new JSONObject(wishesResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("messages");
+
+                    // only proceed if ads are returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            WishMessages message = new WishMessages();
+
+                            message.setImageurl(jsonObject.getString("imageurl"));
+                            message.setMessage(jsonObject.getString("message_text"));
+                            SplashActivity.wishMessages.add(i, message);
+                        }
+                    }
+
+                    // now make sure that you set it in parent wish messages list
+                    SplashActivity.wishContainer.setWishMessageList(SplashActivity.wishMessages);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace(); }
+
+        return wishesResponse;
     }
 }

@@ -29,7 +29,9 @@ import android.widget.Toast;
 import com.jayt.begundarshan.adapter.ViewPagerAdapter;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.mFragments.AdsScreen;
+import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.mFragments.Editorial;
+import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.mFragments.News;
 import com.jayt.begundarshan.mFragments.Videos;
 import com.jayt.begundarshan.model.AdsList;
@@ -106,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter.addFragment(new AdsScreen(), "विज्ञापन");
         pagerAdapter.addFragment(new Videos(), "वीडियो");
         pagerAdapter.addFragment(new Editorial(), "संपादकीय");
-//        pagerAdapter.addFragment(new BuySell(), "ख़रीदे बेचे");
-//        pagerAdapter.addFragment(new AdsScreen(), "राशिफ़ल");
+        pagerAdapter.addFragment(new Information(), "जानकारी");
+
 
         //SET ADAPTER TO VP
         vp.setAdapter(pagerAdapter);
