@@ -371,8 +371,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 try {
                     // Create the json to be posted to server
                     JSONObject jsonToPost = buidJsonObject(id, survey_test, yes, no);
-
-                    System.out.println(jsonToPost);
                     Function.executePost(Endpoints.SERVER_URL + "updatesurvey", jsonToPost);
 
                 } catch (JSONException e) {
