@@ -9,6 +9,7 @@ import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.NewsItems;
+import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
 
@@ -17,8 +18,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -76,6 +81,75 @@ public class Function {
                 connection.disconnect();
             }
         }
+    }
+
+    public static String executePost(String myUrl, JSONObject postJson) throws IOException, JSONException {
+        String result = "";
+        HttpURLConnection conn = null;
+
+        try{
+            URL url = new URL(myUrl);
+
+            // 1. create HttpURLConnection
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+            // 2. build JSON object
+            JSONObject jsonObject = postJson;
+
+            // 3. add JSON content to POST request body
+            setPostRequestContent(conn, jsonObject);
+
+            // 4. make POST request to the given URL
+            conn.connect();
+
+            int status = conn.getResponseCode();
+            InputStream is;
+
+            if (status == HttpURLConnection.HTTP_OK || status == HttpURLConnection.HTTP_CREATED) {
+                is = conn.getInputStream();
+                result = "OK";
+            }
+            else{
+                is = conn.getErrorStream();
+                result = "FAIL";
+                Log.d("MYLOG", "ERROR! Response status is: " + status);
+            }
+
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            String line;
+            StringBuffer response = new StringBuffer();
+            while((line = rd.readLine()) != null) {
+                response.append(line);
+                response.append('\r');
+            }
+
+            // close response body
+            rd.close();
+
+            // 5. return response message
+            return response.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if(conn != null) {
+                conn.disconnect();
+            }
+        }
+
+    }
+
+    private static void setPostRequestContent(HttpURLConnection conn,
+                                              JSONObject jsonObject) throws IOException {
+
+        OutputStream os = conn.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(jsonObject.toString());
+        writer.flush();
+        writer.close();
+        os.close();
     }
 
     public static String loadArticles(){
@@ -247,6 +321,12 @@ public class Function {
                     numOfObj++;
                 }
 
+                // Now add survey message if there is any
+                if (SplashActivity.surveyItem.size() > 0){
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.surveyItem.get(0));
+                    numOfObj++;
+                }
+
                 // Start from one as already have ad at zero and insert news for next
                 // five places if news are more than five else run till the length of jsonArray
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -333,8 +413,49 @@ public class Function {
                 }
             }
         }catch (RuntimeException e){
-            e.printStackTrace(); }
+            e.printStackTrace();
+        }
 
         return wishesResponse;
+    }
+
+    public static String loadSurvey(){
+        String surveyResponse = "";
+
+        try{
+            surveyResponse = Function.excuteGet(Endpoints.SERVER_URL+"getsurveyresult", "");
+            if(surveyResponse != null && surveyResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of wish message
+                    SplashActivity.surveyItem.clear();
+
+                    JSONObject jsonResponse = new JSONObject(surveyResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("survey");
+
+                    // only proceed if ads are returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            SurveyModel surveyModel = new SurveyModel();
+
+                            surveyModel.setId(jsonObject.getString("id"));
+                            surveyModel.setSurveyTitle(jsonObject.getString("survey_text"));
+                            surveyModel.setYes(jsonObject.getInt("yes"));
+                            surveyModel.setNo(jsonObject.getInt("no"));
+
+                            SplashActivity.surveyItem.add(i, surveyModel);
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+
+        return surveyResponse;
     }
 }

@@ -5,28 +5,40 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.jayt.begundarshan.common.Endpoints;
+import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.Constants;
+import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jayt.begundarshan.DetailsActivity;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.model.NewsItems;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -34,9 +46,11 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> mList;
     private LayoutInflater mInflator;
 
-    private TextView newsTitle, content, published_at;
+    private TextView newsTitle, content, published_at, surveyTitle, surveyResult;
     private ImageView newsImg, mainAd;
     private ImagePopup imagePopup;
+    private ImageButton yesButton, noButton;
+    private LinearLayout yesNoLayout;
 
     public CustomAdapter(Context ctx, List<? extends BaseModel> list) {
         this.ctx = ctx;
@@ -53,6 +67,8 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new AdsViewHolder(mInflator.inflate(R.layout.news_page_ad, parent, false));
             case Constants.ViewType.WISH_TYPE:
                 return new WishMessageViewHolder(mInflator.inflate(R.layout.wish_messages, parent, false));
+            case Constants.ViewType.SURVEY_TYPE:
+                return new SurveyViewHolder(mInflator.inflate(R.layout.survey_item, parent, false));
         }
         return null;
     }
@@ -100,15 +116,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             // Check if it is a breaking news
             final String title;
-
-            // In case i want to fix it for day later
-//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//            LocalDateTime now = LocalDateTime.now();
-//            System.out.println(dtf.format(now));
-//
-//            String var = "2018-09-24T21:54:21.858Z";
-//            boolean isFound = var.contains(dtf.format(now));
-//            System.out.println(isFound);
 
             if(newsObject.getIs_breaking().equals("true") ){
                 title = "ब्रेकिंग न्यूज़: " + newsObject.getTitle();
@@ -252,6 +259,147 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             imagePopup.viewPopup();
         }
 
+    }
+
+    public class SurveyViewHolder extends BaseViewHolder<SurveyModel> implements View.OnClickListener{
+        String gId, gSurveyText;
+        int gYes, gNo;
+        float yesPercent, noPercent;
+
+        SurveyViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            surveyTitle = (TextView) itemView.findViewById(R.id.id_Survey_Title);
+            surveyResult = (TextView) itemView.findViewById(R.id.surveyResult);
+
+            yesButton = (ImageButton)itemView.findViewById(R.id.yesButton);
+            noButton = (ImageButton)itemView.findViewById(R.id.noButton);
+            yesNoLayout = (LinearLayout)itemView.findViewById(R.id.yesNoLayout);
+        }
+
+        @Override
+        public void bind(final SurveyModel object) {
+
+            surveyTitle.setText(object.getSurveyTitle());
+
+            yesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        // after it is clicked. remove control and show result
+                        yesNoLayout.setVisibility(View.GONE);
+                        object.setYes(object.getYes() + 1);
+
+                        yesPercent = (object.getYes()*100)/(object.getYes()+object.getNo());
+                        noPercent = (object.getNo()*100)/(object.getYes()+object.getNo());
+
+                        String result = "हाँ: "+yesPercent+"%   नहीं: "+ noPercent+"%";
+
+                        surveyResult.setText(result);
+                        surveyResult.setVisibility(View.VISIBLE);
+
+                        // Now make sure that you update global variable to post
+                        gId = object.getId();
+                        gSurveyText = object.getSurveyTitle();
+                        gYes = object.getYes();
+                        gNo = object.getNo();
+
+                        // Also update the result in server
+                        new postSurveyUpdate().execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        // after it is clicked. remove control and show result
+
+                        yesNoLayout.setVisibility(View.GONE);
+                        object.setNo(object.getNo() + 1);
+
+                        surveyResult.setVisibility(View.VISIBLE);
+
+                        yesPercent = (object.getYes()*100)/(object.getYes()+object.getNo());
+                        noPercent = (object.getNo()*100)/(object.getYes()+object.getNo());
+                        String result = "हाँ: "+yesPercent+"%   नहीं: "+ noPercent+"%";
+                        surveyResult.setText(result);
+
+                        // Now make sure that you update global variable to post
+                        gId = object.getId();
+                        gSurveyText = object.getSurveyTitle();
+                        gYes = object.getYes();
+                        gNo = object.getNo();
+
+                        // Also update the result in server
+                        new postSurveyUpdate().execute();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }
+
+        private class postSurveyUpdate extends AsyncTask<String, Void, String> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(String... urls) {
+                sendSurveyUpdate(gId, gSurveyText, gYes, gNo);
+
+                return "";
+            }
+
+            // onPostExecute displays the results of the AsyncTask.
+            @Override
+            protected void onPostExecute(String result) {
+                // nothing
+            }
+        }
+
+        private void sendSurveyUpdate(String id, String survey_test, int yes, int no){
+            try {
+                try {
+                    // Create the json to be posted to server
+                    JSONObject jsonToPost = buidJsonObject(id, survey_test, yes, no);
+
+                    System.out.println(jsonToPost);
+                    Function.executePost(Endpoints.SERVER_URL + "updatesurvey", jsonToPost);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            catch (IOException ex){
+                ex.printStackTrace();
+            }
+
+        }
+
+        private JSONObject buidJsonObject(String id, String survey_text, int yes, int no) throws JSONException {
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.accumulate("id", id);
+            jsonObject.accumulate("survey_text",  survey_text);
+            jsonObject.accumulate("yes", yes);
+            jsonObject.accumulate("no", no);
+
+            return jsonObject;
+        }
+
+        @Override
+        public void onClick(View v) {
+            //imagePopup.viewPopup();
+        }
     }
 }
 
