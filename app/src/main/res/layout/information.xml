@@ -12,6 +12,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:paddingTop="5dp">
 
         <LinearLayout
@@ -21,38 +23,42 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/teamBegun"
-                card_view:cardBackgroundColor="@color/colorPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:layout_margin="3dp"
+                android:orientation="vertical"
+                card_view:cardBackgroundColor="@color/colorPrimary"
                 card_view:cardCornerRadius="10dp"
                 card_view:cardElevation="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorPrimaryDark"
                     android:layout_gravity="center_horizontal"
+                    android:paddingStart="5dp"
+                    android:text="@string/title"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="24sp"
-                    android:paddingLeft="5dp"
-                    android:textStyle="bold"
-                    android:text="@string/title"/>
+                    android:textStyle="bold" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
                     android:padding="10dp"
+                    android:text="@string/contactInfo"
                     android:textColor="@color/colorAccent"
-                    android:textStyle="bold"
-                    android:text="@string/contactInfo"/>
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             </android.support.v7.widget.CardView>
+
             <android.support.v7.widget.CardView
-                card_view:cardBackgroundColor="@color/colorPrimary"
+                android:id="@+id/impNumbers"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="3dp"
                 android:orientation="vertical"
+                card_view:cardBackgroundColor="@color/colorPrimary"
                 card_view:cardCornerRadius="10dp"
                 card_view:cardElevation="10dp">
 
@@ -62,6 +68,126 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingTop="5dp"
+                        android:text="@string/numberTitle"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/important_numbers" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="3dp"
+                android:orientation="vertical"
+                card_view:cardBackgroundColor="@color/colorPrimary"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/otherNews"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="140dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/dainikBhaskar"
+                            android:layout_width="80dp"
+                            android:layout_height="100dp"
+                            android:layout_marginEnd="40dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/dainik_bhaskar_logo" />
+
+                        <ImageButton
+                            android:id="@+id/dainikNavjyoti"
+                            android:layout_width="80dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/dainik_navjyoti_logo" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="140dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/dainikJagran"
+                            android:layout_width="80dp"
+                            android:layout_height="100dp"
+                            android:layout_marginEnd="40dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/dainik_jagaran" />
+
+                        <ImageButton
+                            android:id="@+id/rajPatrika"
+                            android:layout_width="80dp"
+                            android:layout_height="100dp"
+                            android:layout_weight="1"
+                            android:background="@color/colorPrimary"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/patrika" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                card_view:cardBackgroundColor="@color/colorPrimary"
+                card_view:cardCornerRadius="10dp"
+                card_view:cardElevation="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -70,19 +196,17 @@
                         android:padding="5dp"
                         android:text="@string/roadwaysTitle"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="22sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         android:visibility="visible" />
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="fitXY"
                         android:layout_gravity="center"
-                        android:src="@drawable/bus_time_table"/>
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bus_time_table" />
                 </LinearLayout>
-
-
-
             </android.support.v7.widget.CardView>
 
         </LinearLayout>

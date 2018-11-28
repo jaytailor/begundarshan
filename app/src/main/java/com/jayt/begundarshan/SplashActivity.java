@@ -16,6 +16,7 @@ import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
+import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
@@ -50,6 +51,8 @@ public class SplashActivity extends Activity {
     public static ArrayList<WishMessages> wishMessages = new ArrayList<WishMessages>();
     public static WishMessageParentModel wishContainer = new WishMessageParentModel();
 
+    // Load surveys
+    public static ArrayList<SurveyModel> surveyItem = new ArrayList<SurveyModel>();
 
     public SplashActivity() {
     }
@@ -86,6 +89,9 @@ public class SplashActivity extends Activity {
         protected String doInBackground(String... args) {
             String response = "SUCCESS";
             try{
+
+                // Load survey (if any)
+                Function.loadSurvey();
 
                 // Load ordered ads for ads tab
                 Function.loadAds("ads");
