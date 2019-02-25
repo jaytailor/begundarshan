@@ -16,8 +16,8 @@ import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.adapter.EditorialAdapter;
 import com.jayt.begundarshan.common.Function;
 
-public class Editorial extends Fragment{
 
+public class RssFeed extends Fragment {
     View view;
 
     // swipe up to refresh
@@ -26,23 +26,23 @@ public class Editorial extends Fragment{
     // Recycler View Field
     RecyclerView recyclerView;
 
-    public Editorial() {
+    public RssFeed() {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.editorial, container, false);
+        view = inflater.inflate(R.layout.rssfeed, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.editorialView);
+        recyclerView = (RecyclerView) view.findViewById(R.id.rssView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        new GetArticleList().execute("norefresh");
+        new GetRssFeed().execute("norefresh");
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
@@ -54,7 +54,7 @@ public class Editorial extends Fragment{
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                new GetArticleList().execute("refresh");
+                new GetRssFeed().execute("refresh");
             }
         });
 
@@ -67,7 +67,7 @@ public class Editorial extends Fragment{
         return view;
     }
 
-    class GetArticleList extends AsyncTask<String, Void, String> {
+    class GetRssFeed extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -77,7 +77,8 @@ public class Editorial extends Fragment{
 
             // if called on pull to refresh
             if(args[0].equals("refresh"))
-                Function.loadArticles();
+                //Function.loadArticles();
+                System.out.println("yee");
 
             return args[0];
         }
@@ -89,14 +90,13 @@ public class Editorial extends Fragment{
             if(response.equals("refresh"))
                 swipeContainer.setRefreshing(false);
 
-            // updating UI from Background Thread
-            getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    EditorialAdapter editorialAdapterAdapter = new EditorialAdapter(getActivity(), SplashActivity.articleList);
-                    recyclerView.setAdapter(editorialAdapterAdapter);
-                }
-            });
+//            // updating UI from Background Thread
+//            getActivity().runOnUiThread(new Runnable() {
+//                public void run() {
+//                    EditorialAdapter editorialAdapterAdapter = new EditorialAdapter(getActivity(), SplashActivity.articleList);
+//                    recyclerView.setAdapter(editorialAdapterAdapter);
+//                }
+//            });
         }
     }
-
 }

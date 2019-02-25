@@ -40,6 +40,9 @@ public class SplashActivity extends Activity {
     // Vector for articles
     public static Vector<BaseModel> articleList = new Vector<>();
 
+    // Vector for rssfeed
+    public static Vector<BaseModel> rssFeedList = new Vector<>();
+
     // Vector for video URL
     public static Vector<YoutubeVideo> youtubeVideos = new Vector<YoutubeVideo>();
 
@@ -107,6 +110,9 @@ public class SplashActivity extends Activity {
 
                 // Load articles
                 Function.loadArticles();
+
+                // Load rss feed
+                Function.loadRssFeed();
 
                 // Load Videos
                 Function.loadVideos();

@@ -33,6 +33,7 @@ import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.mFragments.Editorial;
 import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.mFragments.News;
+import com.jayt.begundarshan.mFragments.RssFeed;
 import com.jayt.begundarshan.mFragments.Videos;
 import com.jayt.begundarshan.model.AdsList;
 
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter.addFragment(new Videos(), "वीडियो");
         pagerAdapter.addFragment(new Editorial(), "संपादकीय");
         pagerAdapter.addFragment(new Information(), "जानकारी");
+        pagerAdapter.addFragment(new RssFeed(), "समाचार-1");
 
 
         //SET ADAPTER TO VP

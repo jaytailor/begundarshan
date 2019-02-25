@@ -16,6 +16,8 @@ import com.jayt.begundarshan.model.YoutubeVideo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -25,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -215,6 +218,85 @@ public class Function {
 
         }catch (RuntimeException e){
             e.printStackTrace();
+        }
+        return articleResponse;
+    }
+
+    public static String loadRssFeed(){
+
+        String rssResponse = "";
+        String urlParameters = "";
+        int numOfObj = 0;
+        Exception exception = null;
+
+        try{
+            URL url = new URL(Endpoints.RSS_URL);
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(false);
+
+
+            rssResponse = Function.excuteGet(Endpoints.RSS_URL, urlParameters);
+
+            if(rssResponse != null && rssResponse.length()>10){ // Just checking if not empty
+
+                try {
+                    //Load editorial List but clear from earlier call
+                    SplashActivity.rssFeedList.clear();
+
+                    JSONObject jsonResponse = new JSONObject(articleResponse);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("article_list");
+
+                    if (SplashActivity.orderedAdList.size() >= 2) {
+                        SplashActivity.articleList.add(0, SplashActivity.orderedAdList.get(0));
+                        numOfObj++;
+                    }
+
+                    // only proceed if article are returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            EditorialModel article = new EditorialModel();
+
+                            article.setEditorial_title(jsonObject.getString("title"));
+                            article.setEditorial_content(jsonObject.getString("content"));
+                            article.setEditorial_writer(jsonObject.getString("writer"));
+
+                            JSONArray imageArray = jsonObject.getJSONArray("image");
+                            if(imageArray != null) {
+                                ArrayList<String> listOfImages = new ArrayList<>();
+
+                                // Load all the images from the news
+                                for (int k = 0; k < imageArray.length(); k++) {
+                                    listOfImages.add(k, imageArray.getString(k));
+                                }
+
+                                article.setEditorial_image(listOfImages);
+                            }
+
+                            article.setEditorial_published_at(jsonObject.getString("published_at"));
+
+                            SplashActivity.articleList.add(numOfObj, article);
+                            numOfObj++;
+                        }
+
+                        if (SplashActivity.orderedAdList.size() >= 2) {
+                            SplashActivity.articleList.add(numOfObj, SplashActivity.orderedAdList.get(1));
+                            numOfObj++;
+                        }
+                    }
+                } catch (MalformedURLException e) {
+                    exception = e;
+                }
+            }
+
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+        catch (XmlPullParserException e) {
+            exception = e;
+        }
+        catch (IOException e) {
+            exception = e;
         }
         return articleResponse;
     }
