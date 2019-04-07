@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.adapter.EditorialAdapter;
+import com.jayt.begundarshan.adapter.RssViewAdapter;
 import com.jayt.begundarshan.common.Function;
 
 
@@ -45,7 +46,7 @@ public class RssFeed extends Fragment {
         new GetRssFeed().execute("norefresh");
 
         // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.rssSwipeContainer);
 
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -77,9 +78,7 @@ public class RssFeed extends Fragment {
 
             // if called on pull to refresh
             if(args[0].equals("refresh"))
-                //Function.loadArticles();
-                System.out.println("yee");
-
+                Function.loadRssFeed();
             return args[0];
         }
 
@@ -90,13 +89,13 @@ public class RssFeed extends Fragment {
             if(response.equals("refresh"))
                 swipeContainer.setRefreshing(false);
 
-//            // updating UI from Background Thread
-//            getActivity().runOnUiThread(new Runnable() {
-//                public void run() {
-//                    EditorialAdapter editorialAdapterAdapter = new EditorialAdapter(getActivity(), SplashActivity.articleList);
-//                    recyclerView.setAdapter(editorialAdapterAdapter);
-//                }
-//            });
+            // updating UI from Background Thread
+            getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    RssViewAdapter rssAdapter = new RssViewAdapter(getActivity(), SplashActivity.rssFeedList);
+                    recyclerView.setAdapter(rssAdapter);
+                }
+            });
         }
     }
 }

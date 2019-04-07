@@ -6,9 +6,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.jayt.begundarshan.SplashActivity;
+import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.NewsItems;
+import com.jayt.begundarshan.model.RssFeedModel;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
@@ -16,6 +18,7 @@ import com.jayt.begundarshan.model.YoutubeVideo;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -222,11 +225,19 @@ public class Function {
         return articleResponse;
     }
 
-    public static String loadRssFeed(){
+    public static InputStream getInputStream(URL url){
+        try {
+            return url.openConnection().getInputStream();
+        }
+        catch (IOException e)
+        {
+            return null;
+        }
+    }
+
+    public static Exception loadRssFeed(){
 
         String rssResponse = "";
-        String urlParameters = "";
-        int numOfObj = 0;
         Exception exception = null;
 
         try{
@@ -234,71 +245,66 @@ public class Function {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(false);
 
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(getInputStream(url), "UTF_8");
 
-            rssResponse = Function.excuteGet(Endpoints.RSS_URL, urlParameters);
+            boolean insideItem = false;
 
-            if(rssResponse != null && rssResponse.length()>10){ // Just checking if not empty
-
-                try {
-                    //Load editorial List but clear from earlier call
-                    SplashActivity.rssFeedList.clear();
-
-                    JSONObject jsonResponse = new JSONObject(articleResponse);
-                    JSONArray jsonArray = jsonResponse.optJSONArray("article_list");
-
-                    if (SplashActivity.orderedAdList.size() >= 2) {
-                        SplashActivity.articleList.add(0, SplashActivity.orderedAdList.get(0));
-                        numOfObj++;
+            int eventType = xpp.getEventType();
+            int numItem = 0;
+            while (eventType != XmlPullParser.END_DOCUMENT){
+                RssFeedModel rssModel = new RssFeedModel();
+                if (eventType == XmlPullParser.START_TAG){
+                    if(xpp.getName().equalsIgnoreCase("item")){
+                        insideItem = true;
+                        numItem++;
+                        System.out.println("item exists..at ");
+                        System.out.println(numItem);
                     }
-
-                    // only proceed if article are returned
-                    if(jsonArray != null){
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            EditorialModel article = new EditorialModel();
-
-                            article.setEditorial_title(jsonObject.getString("title"));
-                            article.setEditorial_content(jsonObject.getString("content"));
-                            article.setEditorial_writer(jsonObject.getString("writer"));
-
-                            JSONArray imageArray = jsonObject.getJSONArray("image");
-                            if(imageArray != null) {
-                                ArrayList<String> listOfImages = new ArrayList<>();
-
-                                // Load all the images from the news
-                                for (int k = 0; k < imageArray.length(); k++) {
-                                    listOfImages.add(k, imageArray.getString(k));
-                                }
-
-                                article.setEditorial_image(listOfImages);
-                            }
-
-                            article.setEditorial_published_at(jsonObject.getString("published_at"));
-
-                            SplashActivity.articleList.add(numOfObj, article);
-                            numOfObj++;
-                        }
-
-                        if (SplashActivity.orderedAdList.size() >= 2) {
-                            SplashActivity.articleList.add(numOfObj, SplashActivity.orderedAdList.get(1));
-                            numOfObj++;
+                    if(xpp.getName().equalsIgnoreCase("title")){
+                        if(insideItem){
+                            System.out.println("title "+ xpp.nextText());
+                            rssModel.setRss_title(xpp.nextText());
                         }
                     }
-                } catch (MalformedURLException e) {
-                    exception = e;
+                    if(xpp.getName().equalsIgnoreCase("link")){
+                        if(insideItem){
+                            System.out.println("link "+ xpp.nextText());
+                            rssModel.setRss_link(xpp.nextText());
+                        }
+                    }
+                    if(xpp.getName().equalsIgnoreCase("description")){
+                        if(insideItem){
+                            System.out.println(xpp.nextText());
+                            rssModel.setRss_content(xpp.nextText());
+                        }
+                    }
+                    if(xpp.getName().equalsIgnoreCase("pubDate")){
+                        if(insideItem){
+                            System.out.println(xpp.nextText());
+                            rssModel.setRss_published_at(xpp.nextText());
+                        }
+                    }
+                    SplashActivity.rssFeedList.add(numItem, rssModel);
                 }
+                else if(eventType == XmlPullParser.END_TAG && xpp.getName().equalsIgnoreCase("item")){
+                    insideItem = false;
+                }
+                eventType = xpp.next();
             }
-
         }catch (RuntimeException e){
             e.printStackTrace();
+            exception = e;
         }
         catch (XmlPullParserException e) {
+            e.printStackTrace();
             exception = e;
         }
         catch (IOException e) {
+            e.printStackTrace();
             exception = e;
         }
-        return articleResponse;
+        return exception;
     }
 
     public static String loadVideos(){

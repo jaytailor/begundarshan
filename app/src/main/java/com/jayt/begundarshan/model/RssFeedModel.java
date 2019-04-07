@@ -8,8 +8,22 @@ public class RssFeedModel implements BaseModel {
     String id;
     String rss_title;
     String rss_content;
+    String rss_link;
     ArrayList<String> rss_image;
     String rss_published_at;
+
+    public RssFeedModel(){
+        // empty constructor
+    }
+
+    public RssFeedModel(String id, String rss_title, String rss_content, String rss_link, ArrayList<String> rss_image, String rss_published_at) {
+        this.id = id;
+        this.rss_title = rss_title;
+        this.rss_content = rss_content;
+        this.rss_link = rss_link;
+        this.rss_image = rss_image;
+        this.rss_published_at = rss_published_at;
+    }
 
     public String getId() {
         return id;
@@ -33,6 +47,14 @@ public class RssFeedModel implements BaseModel {
 
     public void setRss_content(String rss_content) {
         this.rss_content = rss_content;
+    }
+
+    public String getRss_link() {
+        return rss_link;
+    }
+
+    public void setRss_link(String rss_link) {
+        this.rss_link = rss_link;
     }
 
     public ArrayList<String> getRss_image() {
