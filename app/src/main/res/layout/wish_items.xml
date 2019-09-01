@@ -16,6 +16,15 @@
         android:layout_margin="5dp"
         card_view:cardCornerRadius="10dp"
         card_view:cardElevation="10dp">
+        <TextView
+            android:id="@+id/id_Wish_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:gravity="center_horizontal"
+            android:text="@string/wishMessage"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

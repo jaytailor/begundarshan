@@ -327,6 +327,12 @@ public class Function {
                     numOfObj++;
                 }
 
+                // add wish messages before showing final ad
+                if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
+                    numOfObj++;
+                }
+
                 // Start from one as already have ad at zero and insert news for next
                 // five places if news are more than five else run till the length of jsonArray
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -352,13 +358,6 @@ public class Function {
                     newsitems.setPublished_at(jsonObject.getString("published_at"));
                     newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
                     SplashActivity.newsList.add(numOfObj, newsitems);
-                    numOfObj++;
-                }
-
-                // add wish messages before showing final ad
-                if(SplashActivity.wishContainer != null){
-
-                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
                     numOfObj++;
                 }
 
