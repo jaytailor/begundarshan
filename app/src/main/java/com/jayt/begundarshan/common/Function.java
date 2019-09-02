@@ -247,6 +247,9 @@ public class Function {
                             SplashActivity.youtubeVideos.add(i, video);
                         }
                     }
+                    // now make sure that you set it in parent videos list
+                    SplashActivity.videoContainer.setVideoList(SplashActivity.youtubeVideos);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -327,11 +330,17 @@ public class Function {
                     numOfObj++;
                 }
 
-                // add wish messages before showing final ad
+                // add wish messages before news
                 if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
                     SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
                     numOfObj++;
                 }
+
+//                // add videos
+//                if(SplashActivity.videoContainer != null && SplashActivity.youtubeVideos.size() != 0){
+//                    SplashActivity.newsList.add(numOfObj, SplashActivity.videoContainer);
+//                    numOfObj++;
+//                }
 
                 // Start from one as already have ad at zero and insert news for next
                 // five places if news are more than five else run till the length of jsonArray

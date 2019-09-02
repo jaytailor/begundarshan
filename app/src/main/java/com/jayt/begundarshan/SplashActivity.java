@@ -17,6 +17,7 @@ import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.SurveyModel;
+import com.jayt.begundarshan.model.VideosParentModel;
 import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
@@ -41,7 +42,7 @@ public class SplashActivity extends Activity {
     public static Vector<BaseModel> articleList = new Vector<>();
 
     // Vector for video URL
-    public static Vector<YoutubeVideo> youtubeVideos = new Vector<YoutubeVideo>();
+    public static ArrayList<YoutubeVideo> youtubeVideos = new ArrayList<YoutubeVideo>();
 
     // List for ads
     public static ArrayList<AdsList> orderedAdList = new ArrayList<AdsList>();
@@ -50,6 +51,9 @@ public class SplashActivity extends Activity {
     // List for wish messages
     public static ArrayList<WishMessages> wishMessages = new ArrayList<WishMessages>();
     public static WishMessageParentModel wishContainer = new WishMessageParentModel();
+
+    // List for videos on main
+    public static VideosParentModel videoContainer = new VideosParentModel();
 
     // Load surveys
     public static ArrayList<SurveyModel> surveyItem = new ArrayList<SurveyModel>();

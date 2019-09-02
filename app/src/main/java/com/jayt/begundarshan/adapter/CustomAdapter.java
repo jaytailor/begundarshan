@@ -1,5 +1,6 @@
 package com.jayt.begundarshan.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -13,9 +14,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.holder.BaseViewHolder;
@@ -23,8 +29,10 @@ import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.Constants;
 import com.jayt.begundarshan.model.SurveyModel;
+import com.jayt.begundarshan.model.VideosParentModel;
 import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
+import com.jayt.begundarshan.model.YoutubeVideo;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -52,6 +60,12 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private ImageButton yesButton, noButton;
     private LinearLayout yesNoLayout;
 
+    // video
+    private TextView videoTitle;
+
+    private List<YoutubeVideo> youtubeVideos;
+    private ImageView playButton;
+
     public CustomAdapter(Context ctx, List<? extends BaseModel> list) {
         this.ctx = ctx;
         this.mList = list;
@@ -69,6 +83,8 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 return new WishMessageViewHolder(mInflator.inflate(R.layout.wish_messages, parent, false));
             case Constants.ViewType.SURVEY_TYPE:
                 return new SurveyViewHolder(mInflator.inflate(R.layout.survey_item, parent, false));
+            case Constants.ViewType.VIDEO_TYPE:
+                return new MainVideoViewHolder(mInflator.inflate(R.layout.video_list, parent, false));
         }
         return null;
     }
@@ -257,6 +273,101 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         @Override
         public void onClick(View v) {
             imagePopup.viewPopup();
+        }
+
+    }
+
+    public class MainVideoViewHolder extends BaseViewHolder<VideosParentModel> implements View.OnClickListener{
+        protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
+        YouTubeThumbnailView youTubeThumbnailView;
+        LinearLayout mGallery;
+        View view;
+        LayoutInflater mInflater;
+
+        MainVideoViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+            playButton = (ImageView)itemView.findViewById(R.id.main_YT_btn);
+            videoTitle = (TextView) itemView.findViewById(R.id.id_video_heading);
+
+            playButton.setOnClickListener(this);
+            relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.main_youtube_thumbnail);
+            youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.main_youtube);
+        }
+
+        @Override
+        public void bind(VideosParentModel object) {
+
+            // get the wish message parent object which has list of wish messages object
+            // traverse through that list and inflate a imageview for each and everyone.
+            try{
+                if(object != null) {
+                    for (int i = 0; i < object.getVideoList().size(); i++) {
+                        view = mInflater.inflate(R.layout.video_items, mGallery, false);
+
+                        videoTitle.setText(youtubeVideos.get(i).getTitle());
+
+                        String fullVideoThumbnail = "http://img.youtube.com/vi/" +youtubeVideos.get(i).getUrl()+ "/hqdefault.jpg";
+                        Picasso.with(ctx)
+                                .load(fullVideoThumbnail).fit()
+                                .into(playButton);
+
+                        // add in gallery view
+                        if (view.getParent() != null)
+                            ((ViewGroup) view.getParent()).removeView(view); // <- fix
+
+                        mGallery.addView(view);
+
+                        final YouTubeThumbnailLoader.OnThumbnailLoadedListener  onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener(){
+                            @Override
+                            public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+
+                            }
+
+                            @Override
+                            public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                                youTubeThumbnailView.setVisibility(View.VISIBLE);
+                                relativeLayoutOverYouTubeThumbnailView.setVisibility(View.VISIBLE);
+                            }
+                        };
+
+                        youTubeThumbnailView.initialize("AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70", new YouTubeThumbnailView.OnInitializedListener() {
+                            @Override
+                            public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+
+                                youTubeThumbnailLoader.setVideo(youtubeVideos.get(0).getUrl());
+                                youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                                youTubeThumbnailLoader.release();
+                            }
+
+                            @Override
+                            public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+                                //write something for failure
+                            }
+                        });
+
+                    }
+                }
+            }
+            catch(NullPointerException ex){
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            if(getLayoutPosition() != -1){
+                Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx,
+                        "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70",
+                        youtubeVideos.get(getLayoutPosition()).getUrl(),
+                        100,     //after this time, video will start automatically
+                        true,   //autoplay or not
+                        true);
+
+                ctx.startActivity(intent);
+            }
         }
 
     }
