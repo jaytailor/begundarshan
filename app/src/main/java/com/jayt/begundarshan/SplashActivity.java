@@ -53,7 +53,7 @@ public class SplashActivity extends Activity {
     public static WishMessageParentModel wishContainer = new WishMessageParentModel();
 
     // List for videos on main
-    public static VideosParentModel videoContainer = new VideosParentModel();
+    //public static VideosParentModel videoContainer = new VideosParentModel();
 
     // Load surveys
     public static ArrayList<SurveyModel> surveyItem = new ArrayList<SurveyModel>();
@@ -103,6 +103,9 @@ public class SplashActivity extends Activity {
                 // Load top ads for main news page
                 Function.loadAds("topads?priority=5");
 
+                // Load Videos
+                Function.loadVideos();
+
                 // Load wish messages
                 Function.loadWishMessage();
 
@@ -111,9 +114,6 @@ public class SplashActivity extends Activity {
 
                 // Load articles
                 Function.loadArticles();
-
-                // Load Videos
-                Function.loadVideos();
 
             }catch (RuntimeException e){
                 e.printStackTrace();

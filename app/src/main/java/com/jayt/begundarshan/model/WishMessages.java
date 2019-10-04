@@ -2,7 +2,7 @@ package com.jayt.begundarshan.model;
 
 import com.jayt.begundarshan.interfaces.BaseModel;
 
-public class WishMessages{
+public class WishMessages implements BaseModel{
 
     String id;
     String imageurl;
@@ -51,6 +51,11 @@ public class WishMessages{
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public int getViewType() {
+        return Constants.ViewType.WISH_TYPE;
     }
 
 }

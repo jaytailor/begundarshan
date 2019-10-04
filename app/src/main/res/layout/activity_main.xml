@@ -11,7 +11,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbarid"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:gravity="center"
         app:elevation="0dp">
 
@@ -21,22 +21,22 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginStart="5dp"
-                    android:src="@drawable/menal_temple"/>
-            </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1.2">-->
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:layout_marginStart="5dp"-->
+                    <!--android:src="@drawable/menal_temple"/>-->
+            <!--</LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:orientation="vertical">
                 <ImageView
                     android:layout_width="wrap_content"
@@ -47,19 +47,22 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:layout_weight="0.5"
                 android:layout_gravity="bottom"
                 android:orientation="vertical">
                 <ImageButton
                     android:id="@+id/questionMark"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingTop="1dp"
+                    android:layout_gravity="start"
                     android:background="@color/colorPrimary"
                     android:src="@drawable/question" />
                 <ImageButton
                     android:id="@+id/shareImageButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="end"
                     android:background="@color/colorPrimary"
                     android:src="@drawable/whatsapp_32" />
             </LinearLayout>

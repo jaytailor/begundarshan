@@ -27,12 +27,18 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Function {
 
     public static boolean isNetworkAvailable(Context context)
     {
         return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    }
+
+    private static int getRandomNumberInRange(int max) {
+        Random r = new Random();
+        return r.nextInt(max);
     }
 
     public static String excuteGet(String targetURL, String urlParameters)
@@ -248,7 +254,7 @@ public class Function {
                         }
                     }
                     // now make sure that you set it in parent videos list
-                    SplashActivity.videoContainer.setVideoList(SplashActivity.youtubeVideos);
+                    //SplashActivity.videoContainer.setVideoList(SplashActivity.youtubeVideos);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -332,12 +338,14 @@ public class Function {
 
                 // add wish messages before news
                 if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
-                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
+                    int randomWishMsg = getRandomNumberInRange(SplashActivity.wishMessages.size());
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishMessages.get(randomWishMsg)); // just add first wish message
                     numOfObj++;
                 }
 
-//                // add videos
+                // add videos
 //                if(SplashActivity.videoContainer != null && SplashActivity.youtubeVideos.size() != 0){
+//                    System.out.println("video list has items");
 //                    SplashActivity.newsList.add(numOfObj, SplashActivity.videoContainer);
 //                    numOfObj++;
 //                }
