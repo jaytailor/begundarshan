@@ -27,6 +27,7 @@ import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.Constants;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.VideosParentModel;
@@ -54,7 +55,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> mList;
     private LayoutInflater mInflator;
 
-    private TextView newsTitle, content, published_at, surveyTitle, surveyResult, videoTitle;
+    private TextView newsTitle, content, published_at, surveyTitle, surveyResult, videoTitle, breakingNewsFlash;
     private ImageView newsImg, mainAd, playButton;
     private ImagePopup imagePopup;
     private ImageButton yesButton, noButton;
@@ -74,6 +75,8 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         switch (viewType) {
             case Constants.ViewType.NEWS_TYPE:
                 return new NewsViewHolder(mInflator.inflate(R.layout.news_items, parent, false));
+            case Constants.ViewType.BREAKING_NEWS_TYPE:
+                return new BreakingNewsViewHolder(mInflator.inflate(R.layout.news_page_breaking, parent, false));
             case Constants.ViewType.AD_TYPE:
                 return new AdsViewHolder(mInflator.inflate(R.layout.news_page_ad, parent, false));
             case Constants.ViewType.WISH_TYPE:
@@ -105,6 +108,30 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(final BaseViewHolder holder, final int position) {
         holder.bind(mList.get(position));
+    }
+
+    public class BreakingNewsViewHolder extends BaseViewHolder<BreakingNews> implements View.OnClickListener{
+
+        BreakingNewsViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            breakingNewsFlash = (TextView) itemView.findViewById(R.id.breakingNewsFlashTitle);
+        }
+
+        @Override
+        public void bind(BreakingNews newsObject) {
+
+            if(newsObject != null){
+                breakingNewsFlash.setText("ब्रेकिंग न्यूज़: " + newsObject.getMessage() + " : ब्रेकिंग न्यूज़" );
+                breakingNewsFlash.setSelected(true);  // Set focus to the textview
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+        }
     }
 
     public class NewsViewHolder extends BaseViewHolder<NewsItems> implements View.OnClickListener{

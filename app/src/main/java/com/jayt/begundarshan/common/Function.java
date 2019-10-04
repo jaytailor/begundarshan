@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.NewsItems;
 import com.jayt.begundarshan.model.SurveyModel;
@@ -28,6 +29,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Function {
 
@@ -225,11 +230,11 @@ public class Function {
         return articleResponse;
     }
 
-    public static String loadVideos(){
-        String videoResponse = "", urlParameters = "";
+    public static void loadVideos(){
+        String urlParameters = "";
 
         try{
-            videoResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
+            String videoResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
 
             if(videoResponse != null && videoResponse.length()>10){ // Just checking if not empty
 
@@ -263,14 +268,12 @@ public class Function {
         }catch (RuntimeException e){
             e.printStackTrace();
         }
-        return videoResponse;
     }
 
-    public static String loadAds(String route){
-        String adResponse = "", urlParameters = "";
-
+    public static void loadAds(String route){
+        String urlParameters = "";
         try{
-            adResponse = Function.excuteGet(Endpoints.SERVER_URL+route, urlParameters);
+            String adResponse = Function.excuteGet(Endpoints.SERVER_URL+route, urlParameters);
             if(adResponse != null && adResponse.length()>10){ // Just checking if not empty
 
                 try {
@@ -306,8 +309,6 @@ public class Function {
             }
         }catch (RuntimeException e){
             e.printStackTrace(); }
-
-        return adResponse;
     }
 
     public static String loadNews() {
@@ -323,10 +324,16 @@ public class Function {
                 JSONObject jsonResponse = new JSONObject(newsResponse);
                 JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
 
+                // Now add breaking news flash if there is any
+                if (SplashActivity.breakingNewsList.size() > 0){
+                    SplashActivity.newsList.add(0, SplashActivity.breakingNewsList.get(0));
+                    numOfObj++;
+                }
+
                 // First insert the ads at first and fifth position
                 // But make sure not to add news at those indexes (0, 5)
                 if (SplashActivity.topAdsList.size() >= 2){
-                    SplashActivity.newsList.add(0, SplashActivity.topAdsList.get(0));
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.topAdsList.get(0));
                     numOfObj++;
                 }
 
@@ -395,11 +402,9 @@ public class Function {
         return newsResponse;
     }
 
-    public static String loadWishMessage(){
-        String wishesResponse = "";
-
+    public static void loadWishMessage(){
         try{
-            wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
+            String wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
             if(wishesResponse != null && wishesResponse.length()>10){ // Just checking if not empty
 
                 try {
@@ -431,15 +436,11 @@ public class Function {
         }catch (RuntimeException e){
             e.printStackTrace();
         }
-
-        return wishesResponse;
     }
 
-    public static String loadSurvey(){
-        String surveyResponse = "";
-
+    public static void loadSurvey(){
         try{
-            surveyResponse = Function.excuteGet(Endpoints.SERVER_URL+"getsurveyresult", "");
+            String surveyResponse = Function.excuteGet(Endpoints.SERVER_URL+"getsurveyresult", "");
             if(surveyResponse != null && surveyResponse.length()>10){ // Just checking if not empty
 
                 try {
@@ -471,7 +472,54 @@ public class Function {
         }catch (RuntimeException e){
             e.printStackTrace();
         }
+    }
 
-        return surveyResponse;
+    public static void loadBreakingNews(){
+        try{
+            String res = Function.excuteGet(Endpoints.SERVER_URL+"breakingnews", "");
+            if(res != null && res.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of wish message
+                    SplashActivity.breakingNewsList.clear();
+
+                    JSONObject jsonResponse = new JSONObject(res);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("breakingnews");
+
+                    // only proceed if breaking news is returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            BreakingNews bnewsModel = new BreakingNews();
+
+                            bnewsModel.setId(jsonObject.getString("id"));
+                            bnewsModel.setMessage(jsonObject.getString("newsflash"));
+                            bnewsModel.setPublished_at(jsonObject.getString("published_at"));
+                            bnewsModel.setPushed_at(jsonObject.getString("pushed_at"));
+
+                            // check if the breaking news is from today's
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+                            Date published_at = sdf.parse(jsonObject.getString("published_at"));
+                            Date date = new Date();
+                            String today = sdf.format(date);
+                            Date datetoday = sdf.parse(today);
+
+                            // only add into main object if the news was published today
+                            if(published_at.equals(datetoday)){
+                                SplashActivity.breakingNewsList.add(i, bnewsModel);
+                            }
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                catch (ParseException p) {
+                    p.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
     }
 }

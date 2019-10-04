@@ -15,6 +15,7 @@ import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.VideosParentModel;
@@ -58,6 +59,9 @@ public class SplashActivity extends Activity {
     // Load surveys
     public static ArrayList<SurveyModel> surveyItem = new ArrayList<SurveyModel>();
 
+    // Load breaking news
+    public static ArrayList<BreakingNews> breakingNewsList = new ArrayList<BreakingNews>();
+
     public SplashActivity() {
     }
 
@@ -96,6 +100,9 @@ public class SplashActivity extends Activity {
 
                 // Load survey (if any)
                 Function.loadSurvey();
+
+                // Load breaking news (if any)
+                Function.loadBreakingNews();
 
                 // Load ordered ads for ads tab
                 Function.loadAds("ads");
