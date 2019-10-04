@@ -343,13 +343,6 @@ public class Function {
                     numOfObj++;
                 }
 
-                // add wish messages before news
-                if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
-                    int randomWishMsg = getRandomNumberInRange(SplashActivity.wishMessages.size());
-                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishMessages.get(randomWishMsg)); // just add first wish message
-                    numOfObj++;
-                }
-
                 // add videos
 //                if(SplashActivity.videoContainer != null && SplashActivity.youtubeVideos.size() != 0){
 //                    System.out.println("video list has items");
@@ -357,8 +350,9 @@ public class Function {
 //                    numOfObj++;
 //                }
 
-                // Start from one as already have ad at zero and insert news for next
-                // five places if news are more than five else run till the length of jsonArray
+
+                // Check if there are atleast 6 news to avoid crash
+                // load first num(6) news and then add wish message and then
                 for (int i = 0; i < jsonArray.length(); i++) {
 
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -383,6 +377,15 @@ public class Function {
                     newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
                     SplashActivity.newsList.add(numOfObj, newsitems);
                     numOfObj++;
+
+                    // add wish messages after six news
+                    if( i == 6){
+                        if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
+                            int randomWishMsg = getRandomNumberInRange(SplashActivity.wishMessages.size());
+                            SplashActivity.newsList.add(numOfObj, SplashActivity.wishMessages.get(randomWishMsg)); // just add first wish message
+                            numOfObj++;
+                        }
+                    }
                 }
 
                 // add an ad at the end
