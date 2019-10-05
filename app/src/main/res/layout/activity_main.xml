@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -21,17 +22,17 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1.2">-->
-                <!--<ImageView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:padding="10dp"-->
-                    <!--android:layout_marginStart="5dp"-->
-                    <!--android:src="@drawable/menal_temple"/>-->
-            <!--</LinearLayout>-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.2">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_marginStart="5dp"
+                    android:src="@drawable/menal_temple"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -81,6 +82,7 @@
         app:tabTextColor="@color/tabTextColor"
         app:tabIndicatorColor="@color/tabIndicatorColor"
         android:background="@color/colorPrimary"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager_id"
         android:layout_width="match_parent"
