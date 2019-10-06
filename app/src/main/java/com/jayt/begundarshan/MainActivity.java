@@ -7,14 +7,12 @@ package com.jayt.begundarshan;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,7 +21,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.jayt.begundarshan.adapter.ViewPagerAdapter;
@@ -31,12 +28,8 @@ import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.mFragments.AdsScreen;
 import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.mFragments.Editorial;
-import com.jayt.begundarshan.mFragments.Information;
 import com.jayt.begundarshan.mFragments.News;
 import com.jayt.begundarshan.mFragments.Videos;
-import com.jayt.begundarshan.model.AdsList;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 

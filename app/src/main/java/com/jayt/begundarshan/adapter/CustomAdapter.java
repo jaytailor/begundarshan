@@ -3,11 +3,9 @@ package com.jayt.begundarshan.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,23 +29,19 @@ import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.Constants;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.VideosParentModel;
-import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jayt.begundarshan.DetailsActivity;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.model.NewsItems;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
