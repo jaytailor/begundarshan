@@ -27,6 +27,7 @@ import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.Constants;
+import com.jayt.begundarshan.model.FirstNewsItem;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.VideosParentModel;
 import com.jayt.begundarshan.model.WishMessages;
@@ -69,6 +70,8 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         switch (viewType) {
             case Constants.ViewType.NEWS_TYPE:
                 return new NewsViewHolder(mInflator.inflate(R.layout.news_items, parent, false));
+            case Constants.ViewType.FIRST_NEWS:
+                return new FirstNewsViewHolder(mInflator.inflate(R.layout.first_news, parent, false));
             case Constants.ViewType.BREAKING_NEWS_TYPE:
                 return new BreakingNewsViewHolder(mInflator.inflate(R.layout.news_page_breaking, parent, false));
             case Constants.ViewType.AD_TYPE:
@@ -125,6 +128,74 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
+        }
+    }
+
+    public class FirstNewsViewHolder extends BaseViewHolder<FirstNewsItem> implements View.OnClickListener{
+        private FirstNewsItem obj;
+
+        FirstNewsViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            newsTitle = (TextView) itemView.findViewById(R.id.mainNewsTitle);
+            newsImg = (ImageView) itemView.findViewById(R.id.mainNewsImage);
+        }
+
+        @Override
+        public void bind(FirstNewsItem newsObject) {
+            newsTitle.setText(newsObject.getTitle());
+            obj = newsObject;
+
+            // Check if it is a breaking news
+            final String title;
+
+            if(newsObject.getIs_breaking().equals("true") ){
+                title = "ब्रेकिंग न्यूज़: " + newsObject.getTitle();
+            }else{
+                title = newsObject.getTitle();
+            }
+
+//            // Change the layout if ad (will write code later for ad). or stretch image if title, content and writer are empty
+//            if(newsObject.getWriter().equals("") && newsObject.getContent().equals("") ){
+//                newsImg.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+//                newsImg.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            }else{
+//                newsImg.getLayoutParams().height = (int) ctx.getResources().getDimension(R.dimen.imageview_height);
+//                newsImg.getLayoutParams().width = (int) ctx.getResources().getDimension(R.dimen.imageview_width);
+//            }
+
+            // Now set the values to view
+            newsTitle.setText(title);
+
+            // If there are no images associated with news then show a default image from drawables
+            if( newsObject.getImage() == null || newsObject.getImage().size() == 0){
+                newsImg.setImageResource(R.drawable.begundarshanlogo);
+            }else{
+
+                if(newsObject.getImage().get(0).length() < 5)
+                {
+                    newsImg.setVisibility(View.GONE);
+                }else{
+                    // get first news image and load that
+                    String image = newsObject.getImage().get(0);
+                    Picasso.with(ctx)
+                            .load(image).fit()
+                            .into(newsImg);
+                }
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(ctx, DetailsActivity.class);
+            intent.putStringArrayListExtra("image", obj.getImage());
+            intent.putExtra("published_at", obj.getPublished_at());
+            intent.putExtra("title", obj.getTitle());
+            intent.putExtra("content", obj.getContent());
+            intent.putExtra("writer", obj.getWriter());
+            ctx.startActivity(intent);
         }
     }
 

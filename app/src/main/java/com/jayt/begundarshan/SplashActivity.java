@@ -7,9 +7,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.os.health.SystemHealthManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.jayt.begundarshan.adapter.EditorialAdapter;
 import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
@@ -38,6 +42,9 @@ public class SplashActivity extends Activity {
 
     // Vector for News
     public static ArrayList<BaseModel> newsList = new ArrayList<>();
+
+    // Vector for First News (just one item)
+    public static ArrayList<BaseModel> firstNewsList = new ArrayList<>();
 
     // Vector for articles
     public static Vector<BaseModel> articleList = new Vector<>();
@@ -70,6 +77,14 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashfile);
+
+        // Initialise google ads
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                System.out.println("Ad mob initialised");
+            }
+        });
 
         handler=new Handler();
         handler.postDelayed(new Runnable() {

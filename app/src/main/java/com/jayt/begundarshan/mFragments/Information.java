@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.jayt.begundarshan.R;
 
 public class Information extends Fragment {
 
     View view;
     ImageButton bhaskar, navjyoti, jagran, patrika;
+    private AdView mAdView;
 
     public Information() {
     }
@@ -25,6 +28,10 @@ public class Information extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.information, container, false);
+
+        mAdView = view.findViewById(R.id.adViewEditorial);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // Find the image buttons
         bhaskar = (ImageButton) view.findViewById(R.id.dainikBhaskar);

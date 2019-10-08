@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     String title = "", content = "", writer="", published_at="";
     ArrayList<String> image;
+    AdView mAdView;
 
     private LinearLayout mGallery;
     private LayoutInflater mInflater;
@@ -31,6 +34,10 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         mInflater = LayoutInflater.from(this);
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         TextView titleView, contentView, writerView, publishedDateView;
         ImageView newsImageView;

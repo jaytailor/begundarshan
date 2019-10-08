@@ -9,6 +9,7 @@ import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.EditorialModel;
+import com.jayt.begundarshan.model.FirstNewsItem;
 import com.jayt.begundarshan.model.NewsItems;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.WishMessages;
@@ -321,6 +322,8 @@ public class Function {
 
             try {
                 SplashActivity.newsList.clear();
+                SplashActivity.firstNewsList.clear();
+
                 JSONObject jsonResponse = new JSONObject(newsResponse);
                 JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
 
@@ -350,17 +353,15 @@ public class Function {
 //                    numOfObj++;
 //                }
 
+                if (jsonArray.length() != 0){
 
-                // Check if there are atleast 6 news to avoid crash
-                // load first num(6) news and then add wish message and then
-                for (int i = 0; i < jsonArray.length(); i++) {
+                    // load first news in separate list
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
 
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    NewsItems newsitems = new NewsItems();
-                    newsitems.setTitle(jsonObject.getString("title"));
-                    newsitems.setContent(jsonObject.getString("content"));
-                    newsitems.setWriter(jsonObject.getString("writer"));
+                    FirstNewsItem firstNews = new FirstNewsItem();
+                    firstNews.setTitle(jsonObject.getString("title"));
+                    firstNews.setContent(jsonObject.getString("content"));
+                    firstNews.setWriter(jsonObject.getString("writer"));
 
                     JSONArray imageArray = jsonObject.getJSONArray("image");
                     if(imageArray != null){
@@ -370,22 +371,58 @@ public class Function {
                         for(int k = 0; k < imageArray.length(); k++){
                             listOfImages.add(k, imageArray.getString(k));
                         }
-                        newsitems.setImage(listOfImages);
+                        firstNews.setImage(listOfImages);
                     }
 
-                    newsitems.setPublished_at(jsonObject.getString("published_at"));
-                    newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
-                    SplashActivity.newsList.add(numOfObj, newsitems);
+                    firstNews.setPublished_at(jsonObject.getString("published_at"));
+                    firstNews.setIs_breaking(jsonObject.getString("is_breaking"));
+
+                    System.out.println(SplashActivity.firstNewsList.size());
+                    SplashActivity.firstNewsList.add(0, firstNews); // add the first news
+
+                    // add it at the first position of overall news list
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.firstNewsList.get(0));
                     numOfObj++;
 
-                    // add wish messages after six news
-                    if( i == 6){
-                        if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
-                            int randomWishMsg = getRandomNumberInRange(SplashActivity.wishMessages.size());
-                            SplashActivity.newsList.add(numOfObj, SplashActivity.wishMessages.get(randomWishMsg)); // just add first wish message
-                            numOfObj++;
+                    // Check if there are atleast 6 news to avoid crash
+                    // load first num(6) news and then add wish message and then
+                    for (int i = 1; i < jsonArray.length(); i++) {
+
+                        JSONObject otherJsonObject = jsonArray.getJSONObject(i);
+
+                        NewsItems newsitems = new NewsItems();
+                        newsitems.setTitle(otherJsonObject.getString("title"));
+                        newsitems.setContent(otherJsonObject.getString("content"));
+                        newsitems.setWriter(otherJsonObject.getString("writer"));
+
+                        JSONArray otherImageArray = otherJsonObject.getJSONArray("image");
+                        if(imageArray != null){
+                            ArrayList<String> listOfImages = new ArrayList<>();
+
+                            // Load all the images from the news
+                            for(int k = 0; k < otherImageArray.length(); k++){
+                                listOfImages.add(k, otherImageArray.getString(k));
+                            }
+                            newsitems.setImage(listOfImages);
+                        }
+
+                        newsitems.setPublished_at(otherJsonObject.getString("published_at"));
+                        newsitems.setIs_breaking(otherJsonObject.getString("is_breaking"));
+
+                        SplashActivity.newsList.add(numOfObj, newsitems);
+
+                        numOfObj++;
+
+                        // add wish messages after six news
+                        if( i == 7){
+                            if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
+                                int randomWishMsg = getRandomNumberInRange(SplashActivity.wishMessages.size());
+                                SplashActivity.newsList.add(numOfObj, SplashActivity.wishMessages.get(randomWishMsg)); // just add first wish message
+                                numOfObj++;
+                            }
                         }
                     }
+
                 }
 
                 // add an ad at the end
