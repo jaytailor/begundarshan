@@ -22,28 +22,29 @@
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:layout_marginStart="5dp"
-                    android:src="@drawable/menal_temple"/>
-            </LinearLayout>
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1.2">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:padding="10dp"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:src="@drawable/menal_temple"/>-->
+<!--            </LinearLayout>-->
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.5"
+                android:layout_weight="2.3"
                 android:orientation="vertical">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
-                    android:src="@drawable/begunlogotextandupdate_1024_500"/>
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/begutoplogo"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="0dp"

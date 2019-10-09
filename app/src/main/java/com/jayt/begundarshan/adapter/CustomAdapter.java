@@ -157,15 +157,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
                 title = newsObject.getTitle();
             }
 
-//            // Change the layout if ad (will write code later for ad). or stretch image if title, content and writer are empty
-//            if(newsObject.getWriter().equals("") && newsObject.getContent().equals("") ){
-//                newsImg.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-//                newsImg.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            }else{
-//                newsImg.getLayoutParams().height = (int) ctx.getResources().getDimension(R.dimen.imageview_height);
-//                newsImg.getLayoutParams().width = (int) ctx.getResources().getDimension(R.dimen.imageview_width);
-//            }
-
             // Now set the values to view
             newsTitle.setText(title);
 
