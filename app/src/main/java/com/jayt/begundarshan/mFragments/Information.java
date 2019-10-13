@@ -1,6 +1,7 @@
 package com.jayt.begundarshan.mFragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.fragment.app.Fragment;
@@ -10,16 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.jayt.begundarshan.R;
+import com.squareup.picasso.Picasso;
 
 public class Information extends Fragment {
 
     View view;
     ImageButton bhaskar, navjyoti, jagran, patrika;
+    ImageView adsPrice;
     private AdView mAdView;
+
+    String imgForAdsPrice = "https://begundarshan.sgp1.digitaloceanspaces.com/ads/adsPrice.png";
 
     public Information() {
     }
@@ -28,6 +34,7 @@ public class Information extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.information, container, false);
+
 
         mAdView = view.findViewById(R.id.adViewEditorial);
         AdRequest adRequest = new AdRequest.Builder().build();

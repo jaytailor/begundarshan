@@ -11,6 +11,8 @@ import android.os.health.SystemHealthManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -69,6 +71,9 @@ public class SplashActivity extends Activity {
     // Load breaking news
     public static ArrayList<BreakingNews> breakingNewsList = new ArrayList<BreakingNews>();
 
+    // Load google admob interstitial ads
+    public static InterstitialAd interstitialAd = null;
+
     public SplashActivity() {
     }
 
@@ -83,6 +88,10 @@ public class SplashActivity extends Activity {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
                 System.out.println("Ad mob initialised");
+                interstitialAd= new InterstitialAd(SplashActivity.this);
+                interstitialAd.setAdUnitId(getString(R.string.interstitialAdId));
+                AdRequest adRequest = new AdRequest.Builder().build();
+                interstitialAd.loadAd(adRequest);
             }
         });
 

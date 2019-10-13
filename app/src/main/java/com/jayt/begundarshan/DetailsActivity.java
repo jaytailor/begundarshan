@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;
@@ -137,6 +138,24 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (SplashActivity.interstitialAd.isLoaded()) {
+            SplashActivity.interstitialAd.show();
+            SplashActivity.interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    // Load the next interstitial.
+                    SplashActivity.interstitialAd.loadAd(new AdRequest.Builder().build());
+                    super.onAdClosed();
+                    finish();
+                }
+            });
+        }else{
+            super.onBackPressed();
+        }
     }
 }
 
