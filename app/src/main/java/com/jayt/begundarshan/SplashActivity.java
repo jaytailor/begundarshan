@@ -7,16 +7,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.os.health.SystemHealthManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.jayt.begundarshan.adapter.EditorialAdapter;
 import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.SurveyModel;
+import com.jayt.begundarshan.model.VideosParentModel;
 import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
@@ -37,11 +45,14 @@ public class SplashActivity extends Activity {
     // Vector for News
     public static ArrayList<BaseModel> newsList = new ArrayList<>();
 
+    // Vector for First News (just one item)
+    public static ArrayList<BaseModel> firstNewsList = new ArrayList<>();
+
     // Vector for articles
     public static Vector<BaseModel> articleList = new Vector<>();
 
     // Vector for video URL
-    public static Vector<YoutubeVideo> youtubeVideos = new Vector<YoutubeVideo>();
+    public static ArrayList<YoutubeVideo> youtubeVideos = new ArrayList<YoutubeVideo>();
 
     // List for ads
     public static ArrayList<AdsList> orderedAdList = new ArrayList<AdsList>();
@@ -51,8 +62,17 @@ public class SplashActivity extends Activity {
     public static ArrayList<WishMessages> wishMessages = new ArrayList<WishMessages>();
     public static WishMessageParentModel wishContainer = new WishMessageParentModel();
 
+    // List for videos on main
+    //public static VideosParentModel videoContainer = new VideosParentModel();
+
     // Load surveys
     public static ArrayList<SurveyModel> surveyItem = new ArrayList<SurveyModel>();
+
+    // Load breaking news
+    public static ArrayList<BreakingNews> breakingNewsList = new ArrayList<BreakingNews>();
+
+    // Load google admob interstitial ads
+    public static InterstitialAd interstitialAd = null;
 
     public SplashActivity() {
     }
@@ -62,6 +82,18 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splashfile);
+
+        // Initialise google ads
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                System.out.println("Ad mob initialised");
+                interstitialAd= new InterstitialAd(SplashActivity.this);
+                interstitialAd.setAdUnitId(getString(R.string.interstitialAdId));
+                AdRequest adRequest = new AdRequest.Builder().build();
+                interstitialAd.loadAd(adRequest);
+            }
+        });
 
         handler=new Handler();
         handler.postDelayed(new Runnable() {
@@ -93,11 +125,17 @@ public class SplashActivity extends Activity {
                 // Load survey (if any)
                 Function.loadSurvey();
 
+                // Load breaking news (if any)
+                Function.loadBreakingNews();
+
                 // Load ordered ads for ads tab
                 Function.loadAds("ads");
 
                 // Load top ads for main news page
                 Function.loadAds("topads?priority=5");
+
+                // Load Videos
+                Function.loadVideos();
 
                 // Load wish messages
                 Function.loadWishMessage();
@@ -107,9 +145,6 @@ public class SplashActivity extends Activity {
 
                 // Load articles
                 Function.loadArticles();
-
-                // Load Videos
-                Function.loadVideos();
 
             }catch (RuntimeException e){
                 e.printStackTrace();

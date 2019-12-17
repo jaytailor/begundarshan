@@ -3,16 +3,18 @@ package com.jayt.begundarshan.mFragments;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.jayt.begundarshan.SplashActivity;
 
 import com.jayt.begundarshan.R;
@@ -24,6 +26,7 @@ public class News extends Fragment {
 
     // Progress Dialog
     private ProgressDialog pDialog;
+    private AdView mAdView;
 
     // swipe up to refresh
     private SwipeRefreshLayout swipeContainer;
@@ -38,6 +41,11 @@ public class News extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.news, container, false);
+
+        // add admob ads
+        mAdView = rootView.findViewById(R.id.adViewEditorial);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         newsRecyclerView = (RecyclerView) rootView.findViewById(R.id.newsRecyclerView);
         newsRecyclerView.setHasFixedSize(true);

@@ -1,44 +1,48 @@
 package com.jayt.begundarshan.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.Constants;
+import com.jayt.begundarshan.model.FirstNewsItem;
 import com.jayt.begundarshan.model.SurveyModel;
-import com.jayt.begundarshan.model.WishMessageParentModel;
+import com.jayt.begundarshan.model.VideosParentModel;
 import com.jayt.begundarshan.model.WishMessages;
+import com.jayt.begundarshan.model.YoutubeVideo;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jayt.begundarshan.DetailsActivity;
 import com.jayt.begundarshan.R;
 import com.jayt.begundarshan.model.NewsItems;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
@@ -46,11 +50,14 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> mList;
     private LayoutInflater mInflator;
 
-    private TextView newsTitle, content, published_at, surveyTitle, surveyResult;
-    private ImageView newsImg, mainAd;
+    private TextView newsTitle, content, published_at, surveyTitle, surveyResult, videoTitle, breakingNewsFlash;
+    private ImageView newsImg, mainAd, playButton;
     private ImagePopup imagePopup;
     private ImageButton yesButton, noButton;
     private LinearLayout yesNoLayout;
+
+    // video
+    private List<YoutubeVideo> youtubeVideos;
 
     public CustomAdapter(Context ctx, List<? extends BaseModel> list) {
         this.ctx = ctx;
@@ -63,12 +70,18 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         switch (viewType) {
             case Constants.ViewType.NEWS_TYPE:
                 return new NewsViewHolder(mInflator.inflate(R.layout.news_items, parent, false));
+            case Constants.ViewType.FIRST_NEWS:
+                return new FirstNewsViewHolder(mInflator.inflate(R.layout.first_news, parent, false));
+            case Constants.ViewType.BREAKING_NEWS_TYPE:
+                return new BreakingNewsViewHolder(mInflator.inflate(R.layout.news_page_breaking, parent, false));
             case Constants.ViewType.AD_TYPE:
                 return new AdsViewHolder(mInflator.inflate(R.layout.news_page_ad, parent, false));
             case Constants.ViewType.WISH_TYPE:
-                return new WishMessageViewHolder(mInflator.inflate(R.layout.wish_messages, parent, false));
+                return new WishMessageViewHolder(mInflator.inflate(R.layout.news_page_wishes, parent, false));
             case Constants.ViewType.SURVEY_TYPE:
                 return new SurveyViewHolder(mInflator.inflate(R.layout.survey_item, parent, false));
+            case Constants.ViewType.VIDEO_TYPE:
+                return new MainVideoViewHolder(mInflator.inflate(R.layout.video_list, parent, false));
         }
         return null;
     }
@@ -92,6 +105,89 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @SuppressWarnings("unchecked")
     public void onBindViewHolder(final BaseViewHolder holder, final int position) {
         holder.bind(mList.get(position));
+    }
+
+    public class BreakingNewsViewHolder extends BaseViewHolder<BreakingNews> implements View.OnClickListener{
+
+        BreakingNewsViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            breakingNewsFlash = (TextView) itemView.findViewById(R.id.breakingNewsFlashTitle);
+        }
+
+        @Override
+        public void bind(BreakingNews newsObject) {
+
+            if(newsObject != null){
+                breakingNewsFlash.setText("ब्रेकिंग न्यूज़: " + newsObject.getMessage() + " : ब्रेकिंग न्यूज़" );
+                breakingNewsFlash.setSelected(true);  // Set focus to the textview
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+        }
+    }
+
+    public class FirstNewsViewHolder extends BaseViewHolder<FirstNewsItem> implements View.OnClickListener{
+        private FirstNewsItem obj;
+
+        FirstNewsViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+
+            newsTitle = (TextView) itemView.findViewById(R.id.mainNewsTitle);
+            newsImg = (ImageView) itemView.findViewById(R.id.mainNewsImage);
+        }
+
+        @Override
+        public void bind(FirstNewsItem newsObject) {
+            newsTitle.setText(newsObject.getTitle());
+            obj = newsObject;
+
+            // Check if it is a breaking news
+            final String title;
+
+            if(newsObject.getIs_breaking().equals("true") ){
+                title = "ब्रेकिंग न्यूज़: " + newsObject.getTitle();
+            }else{
+                title = newsObject.getTitle();
+            }
+
+            // Now set the values to view
+            newsTitle.setText(title);
+
+            // If there are no images associated with news then show a default image from drawables
+            if( newsObject.getImage() == null || newsObject.getImage().size() == 0){
+                newsImg.setImageResource(R.drawable.begundarshanlogo);
+            }else{
+
+                if(newsObject.getImage().get(0).length() < 5)
+                {
+                    newsImg.setVisibility(View.GONE);
+                }else{
+                    // get first news image and load that
+                    String image = newsObject.getImage().get(0);
+                    Picasso.with(ctx)
+                            .load(image).fit()
+                            .into(newsImg);
+                }
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(ctx, DetailsActivity.class);
+            intent.putStringArrayListExtra("image", obj.getImage());
+            intent.putExtra("published_at", obj.getPublished_at());
+            intent.putExtra("title", obj.getTitle());
+            intent.putExtra("content", obj.getContent());
+            intent.putExtra("writer", obj.getWriter());
+            ctx.startActivity(intent);
+        }
     }
 
     public class NewsViewHolder extends BaseViewHolder<NewsItems> implements View.OnClickListener{
@@ -203,15 +299,12 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
-            //imagePopup.viewPopup();
+            imagePopup.viewPopup();
         }
     }
 
-    public class WishMessageViewHolder extends BaseViewHolder<WishMessageParentModel> implements View.OnClickListener{
-        LinearLayout mGallery;
-        View view;
+    public class WishMessageViewHolder extends BaseViewHolder<WishMessages> implements View.OnClickListener{
         ImageView wishMessageImage;
-        LayoutInflater mInflater;
         TextView wishMessage;
 
         WishMessageViewHolder(View itemView) {
@@ -219,32 +312,172 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             itemView.setOnClickListener(this);
 
-            mGallery = (LinearLayout) itemView.findViewById(R.id.id_wish_gallery);
+            wishMessageImage = (ImageView) itemView.findViewById(R.id.mainWishImage);
+            wishMessage = (TextView) itemView.findViewById(R.id.mainWishMessageText);
+
+            // Create a pop up of image if clicked
+            imagePopup = new ImagePopup(ctx);
+            imagePopup.setBackgroundColor(Color.DKGRAY);
+            imagePopup.setFullScreen(true);
+            imagePopup.setHideCloseIcon(false);
+            imagePopup.setImageOnClickClose(true);
+            imagePopup.setKeepScreenOn(true);
+        }
+
+        @Override
+        public void bind(WishMessages object) {
+            try{
+                if(object != null ) {
+                        if(object.getImageurl().length() < 5)
+                        {
+                            mainAd.setVisibility(View.GONE);
+                        }else{
+                            String image = object.getImageurl();
+                            Picasso.with(ctx)
+                                    .load(object.getImageurl()).fit()
+                                    .into(wishMessageImage);
+                            imagePopup.initiatePopupWithPicasso(image);
+                        }
+                        wishMessage.setText(object.getMessage());
+                    }
+            }
+            catch(NullPointerException ex){
+                ex.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            imagePopup.viewPopup();
+        }
+    }
+
+//    old horizontal scroll view based wish messages where u can scroll through bunch of wish messages.
+//    public class WishMessageViewHolder extends BaseViewHolder<WishMessageParentModel> implements View.OnClickListener{
+//        LinearLayout mGallery;
+//        View view;
+//        ImageView wishMessageImage;
+//        LayoutInflater mInflater;
+//        TextView wishMessage;
+//
+//        WishMessageViewHolder(View itemView) {
+//            super(itemView);
+//
+//            itemView.setOnClickListener(this);
+//
+//            mGallery = (LinearLayout) itemView.findViewById(R.id.id_wish_gallery);
+//            mInflater = LayoutInflater.from(ctx);
+//        }
+//
+//        @Override
+//        public void bind(WishMessageParentModel object) {
+//
+//            // get the wish message parent object which has list of wish messages object
+//            // traverse through that list and inflate a imageview for each and everyone.
+//            try{
+//                if(object != null) {
+//                    for (int i = 0; i < object.getWishMessageList().size(); i++) {
+//                        view = mInflater.inflate(R.layout.wish_items, mGallery, false);
+//                        wishMessageImage = (ImageView) view.findViewById(R.id.wishImage);
+//                        //wishMessage = (TextView) view.findViewById(R.id.wishMessageText);
+//                        Picasso.with(ctx)
+//                                .load(object.getWishMessageList().get(i).getImageurl()).fit()
+//                                .into(wishMessageImage);
+//
+//                        //wishMessage.setText(object.getWishMessageList().get(i).getMessage());
+//
+//                        // add in gallery view
+//                        if (view.getParent() != null)
+//                            ((ViewGroup) view.getParent()).removeView(view); // <- fix
+//
+//                        mGallery.addView(view);
+//
+//                    }
+//                }
+//            }
+//            catch(NullPointerException ex){
+//                ex.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            imagePopup.viewPopup();
+//        }
+//
+//    }
+
+    public class MainVideoViewHolder extends BaseViewHolder<VideosParentModel> implements View.OnClickListener{
+        protected RelativeLayout relativeLayoutOverYouTubeThumbnailView;
+        YouTubeThumbnailView youTubeThumbnailView;
+        LinearLayout mGallery;
+        View view;
+        LayoutInflater mInflater;
+
+        MainVideoViewHolder(View itemView) {
+            super(itemView);
+
+            itemView.setOnClickListener(this);
+            playButton = (ImageView)itemView.findViewById(R.id.main_youtube_btn);
+            videoTitle = (TextView) itemView.findViewById(R.id.id_video_heading);
+            mGallery = (LinearLayout) itemView.findViewById(R.id.id_video_gallery);
+
+            playButton.setOnClickListener(this);
+            relativeLayoutOverYouTubeThumbnailView = (RelativeLayout) itemView.findViewById(R.id.main_youtube_thumbnail);
+            youTubeThumbnailView = (YouTubeThumbnailView) itemView.findViewById(R.id.main_youtube);
             mInflater = LayoutInflater.from(ctx);
         }
 
         @Override
-        public void bind(WishMessageParentModel object) {
+        public void bind(VideosParentModel object) {
 
             // get the wish message parent object which has list of wish messages object
             // traverse through that list and inflate a imageview for each and everyone.
             try{
                 if(object != null) {
-                    for (int i = 0; i < object.getWishMessageList().size(); i++) {
-                        view = mInflater.inflate(R.layout.wish_items, mGallery, false);
-                        wishMessageImage = (ImageView) view.findViewById(R.id.wishImage);
-                        wishMessage = (TextView) view.findViewById(R.id.wishMessageText);
-                        Picasso.with(ctx)
-                                .load(object.getWishMessageList().get(i).getImageurl()).fit()
-                                .into(wishMessageImage);
+                    for (int i = 0; i < object.getVideoList().size(); i++) {
+                        view = mInflater.inflate(R.layout.video_items, mGallery, false);
 
-                        wishMessage.setText(object.getWishMessageList().get(i).getMessage());
+                        videoTitle.setText(youtubeVideos.get(i).getTitle());
+
+                        String fullVideoThumbnail = "http://img.youtube.com/vi/" +youtubeVideos.get(i).getUrl()+ "/hqdefault.jpg";
+                        Picasso.with(ctx)
+                                .load(fullVideoThumbnail).fit()
+                                .into(playButton);
 
                         // add in gallery view
                         if (view.getParent() != null)
                             ((ViewGroup) view.getParent()).removeView(view); // <- fix
 
                         mGallery.addView(view);
+
+                        final YouTubeThumbnailLoader.OnThumbnailLoadedListener  onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener(){
+                            @Override
+                            public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+
+                            }
+
+                            @Override
+                            public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                                youTubeThumbnailView.setVisibility(View.VISIBLE);
+                                relativeLayoutOverYouTubeThumbnailView.setVisibility(View.VISIBLE);
+                            }
+                        };
+
+                        youTubeThumbnailView.initialize("AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70", new YouTubeThumbnailView.OnInitializedListener() {
+                            @Override
+                            public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+
+                                youTubeThumbnailLoader.setVideo(youtubeVideos.get(0).getUrl());
+                                youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                                youTubeThumbnailLoader.release();
+                            }
+
+                            @Override
+                            public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+                                //write something for failure
+                            }
+                        });
 
                     }
                 }
@@ -256,7 +489,17 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onClick(View v) {
-            imagePopup.viewPopup();
+
+            if(getLayoutPosition() != -1){
+                Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx,
+                        "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70",
+                        youtubeVideos.get(getLayoutPosition()).getUrl(),
+                        100,     //after this time, video will start automatically
+                        true,   //autoplay or not
+                        true);
+
+                ctx.startActivity(intent);
+            }
         }
 
     }

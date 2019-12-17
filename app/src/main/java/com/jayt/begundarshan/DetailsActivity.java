@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     String title = "", content = "", writer="", published_at="";
     ArrayList<String> image;
+    AdView mAdView;
 
     private LinearLayout mGallery;
     private LayoutInflater mInflater;
@@ -31,6 +35,10 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         mInflater = LayoutInflater.from(this);
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         TextView titleView, contentView, writerView, publishedDateView;
         ImageView newsImageView;
@@ -130,6 +138,24 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (SplashActivity.interstitialAd.isLoaded()) {
+            SplashActivity.interstitialAd.show();
+            SplashActivity.interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    // Load the next interstitial.
+                    SplashActivity.interstitialAd.loadAd(new AdRequest.Builder().build());
+                    super.onAdClosed();
+                    finish();
+                }
+            });
+        }else{
+            super.onBackPressed();
+        }
     }
 }
 

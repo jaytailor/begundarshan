@@ -7,7 +7,9 @@ import android.widget.Toast;
 
 import com.jayt.begundarshan.SplashActivity;
 import com.jayt.begundarshan.model.AdsList;
+import com.jayt.begundarshan.model.BreakingNews;
 import com.jayt.begundarshan.model.EditorialModel;
+import com.jayt.begundarshan.model.FirstNewsItem;
 import com.jayt.begundarshan.model.NewsItems;
 import com.jayt.begundarshan.model.SurveyModel;
 import com.jayt.begundarshan.model.WishMessages;
@@ -27,12 +29,22 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Function {
 
     public static boolean isNetworkAvailable(Context context)
     {
         return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    }
+
+    private static int getRandomNumberInRange(int max) {
+        Random r = new Random();
+        return r.nextInt(max);
     }
 
     public static String excuteGet(String targetURL, String urlParameters)
@@ -219,11 +231,11 @@ public class Function {
         return articleResponse;
     }
 
-    public static String loadVideos(){
-        String videoResponse = "", urlParameters = "";
+    public static void loadVideos(){
+        String urlParameters = "";
 
         try{
-            videoResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
+            String videoResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallvideos", urlParameters);
 
             if(videoResponse != null && videoResponse.length()>10){ // Just checking if not empty
 
@@ -247,6 +259,9 @@ public class Function {
                             SplashActivity.youtubeVideos.add(i, video);
                         }
                     }
+                    // now make sure that you set it in parent videos list
+                    //SplashActivity.videoContainer.setVideoList(SplashActivity.youtubeVideos);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -254,14 +269,12 @@ public class Function {
         }catch (RuntimeException e){
             e.printStackTrace();
         }
-        return videoResponse;
     }
 
-    public static String loadAds(String route){
-        String adResponse = "", urlParameters = "";
-
+    public static void loadAds(String route){
+        String urlParameters = "";
         try{
-            adResponse = Function.excuteGet(Endpoints.SERVER_URL+route, urlParameters);
+            String adResponse = Function.excuteGet(Endpoints.SERVER_URL+route, urlParameters);
             if(adResponse != null && adResponse.length()>10){ // Just checking if not empty
 
                 try {
@@ -297,8 +310,6 @@ public class Function {
             }
         }catch (RuntimeException e){
             e.printStackTrace(); }
-
-        return adResponse;
     }
 
     public static String loadNews() {
@@ -311,13 +322,21 @@ public class Function {
 
             try {
                 SplashActivity.newsList.clear();
+                SplashActivity.firstNewsList.clear();
+
                 JSONObject jsonResponse = new JSONObject(newsResponse);
                 JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
+
+                // Now add breaking news flash if there is any
+                if (SplashActivity.breakingNewsList.size() > 0){
+                    SplashActivity.newsList.add(0, SplashActivity.breakingNewsList.get(0));
+                    numOfObj++;
+                }
 
                 // First insert the ads at first and fifth position
                 // But make sure not to add news at those indexes (0, 5)
                 if (SplashActivity.topAdsList.size() >= 2){
-                    SplashActivity.newsList.add(0, SplashActivity.topAdsList.get(0));
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.topAdsList.get(0));
                     numOfObj++;
                 }
 
@@ -327,16 +346,22 @@ public class Function {
                     numOfObj++;
                 }
 
-                // Start from one as already have ad at zero and insert news for next
-                // five places if news are more than five else run till the length of jsonArray
-                for (int i = 0; i < jsonArray.length(); i++) {
+                // add videos
+//                if(SplashActivity.videoContainer != null && SplashActivity.youtubeVideos.size() != 0){
+//                    System.out.println("video list has items");
+//                    SplashActivity.newsList.add(numOfObj, SplashActivity.videoContainer);
+//                    numOfObj++;
+//                }
 
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonArray.length() != 0){
 
-                    NewsItems newsitems = new NewsItems();
-                    newsitems.setTitle(jsonObject.getString("title"));
-                    newsitems.setContent(jsonObject.getString("content"));
-                    newsitems.setWriter(jsonObject.getString("writer"));
+                    // load first news in separate list
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+
+                    FirstNewsItem firstNews = new FirstNewsItem();
+                    firstNews.setTitle(jsonObject.getString("title"));
+                    firstNews.setContent(jsonObject.getString("content"));
+                    firstNews.setWriter(jsonObject.getString("writer"));
 
                     JSONArray imageArray = jsonObject.getJSONArray("image");
                     if(imageArray != null){
@@ -346,20 +371,58 @@ public class Function {
                         for(int k = 0; k < imageArray.length(); k++){
                             listOfImages.add(k, imageArray.getString(k));
                         }
-                        newsitems.setImage(listOfImages);
+                        firstNews.setImage(listOfImages);
                     }
 
-                    newsitems.setPublished_at(jsonObject.getString("published_at"));
-                    newsitems.setIs_breaking(jsonObject.getString("is_breaking"));
-                    SplashActivity.newsList.add(numOfObj, newsitems);
-                    numOfObj++;
-                }
+                    firstNews.setPublished_at(jsonObject.getString("published_at"));
+                    firstNews.setIs_breaking(jsonObject.getString("is_breaking"));
 
-                // add wish messages before showing final ad
-                if(SplashActivity.wishContainer != null){
+                    System.out.println(SplashActivity.firstNewsList.size());
+                    SplashActivity.firstNewsList.add(0, firstNews); // add the first news
 
-                    SplashActivity.newsList.add(numOfObj, SplashActivity.wishContainer);
+                    // add it at the first position of overall news list
+                    SplashActivity.newsList.add(numOfObj, SplashActivity.firstNewsList.get(0));
                     numOfObj++;
+
+                    // Check if there are atleast 6 news to avoid crash
+                    // load first num(6) news and then add wish message and then
+                    for (int i = 1; i < jsonArray.length(); i++) {
+
+                        JSONObject otherJsonObject = jsonArray.getJSONObject(i);
+
+                        NewsItems newsitems = new NewsItems();
+                        newsitems.setTitle(otherJsonObject.getString("title"));
+                        newsitems.setContent(otherJsonObject.getString("content"));
+                        newsitems.setWriter(otherJsonObject.getString("writer"));
+
+                        JSONArray otherImageArray = otherJsonObject.getJSONArray("image");
+                        if(imageArray != null){
+                            ArrayList<String> listOfImages = new ArrayList<>();
+
+                            // Load all the images from the news
+                            for(int k = 0; k < otherImageArray.length(); k++){
+                                listOfImages.add(k, otherImageArray.getString(k));
+                            }
+                            newsitems.setImage(listOfImages);
+                        }
+
+                        newsitems.setPublished_at(otherJsonObject.getString("published_at"));
+                        newsitems.setIs_breaking(otherJsonObject.getString("is_breaking"));
+
+                        SplashActivity.newsList.add(numOfObj, newsitems);
+
+                        numOfObj++;
+
+                        // add wish messages after six news
+                        if( i == 7){
+                            if(SplashActivity.wishContainer != null && SplashActivity.wishMessages.size() != 0){
+                                int randomWishMsg = getRandomNumberInRange(SplashActivity.wishMessages.size());
+                                SplashActivity.newsList.add(numOfObj, SplashActivity.wishMessages.get(randomWishMsg)); // just add first wish message
+                                numOfObj++;
+                            }
+                        }
+                    }
+
                 }
 
                 // add an ad at the end
@@ -379,11 +442,9 @@ public class Function {
         return newsResponse;
     }
 
-    public static String loadWishMessage(){
-        String wishesResponse = "";
-
+    public static void loadWishMessage(){
         try{
-            wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
+            String wishesResponse = Function.excuteGet(Endpoints.SERVER_URL+"getallwishes", "");
             if(wishesResponse != null && wishesResponse.length()>10){ // Just checking if not empty
 
                 try {
@@ -415,15 +476,11 @@ public class Function {
         }catch (RuntimeException e){
             e.printStackTrace();
         }
-
-        return wishesResponse;
     }
 
-    public static String loadSurvey(){
-        String surveyResponse = "";
-
+    public static void loadSurvey(){
         try{
-            surveyResponse = Function.excuteGet(Endpoints.SERVER_URL+"getsurveyresult", "");
+            String surveyResponse = Function.excuteGet(Endpoints.SERVER_URL+"getsurveyresult", "");
             if(surveyResponse != null && surveyResponse.length()>10){ // Just checking if not empty
 
                 try {
@@ -455,7 +512,54 @@ public class Function {
         }catch (RuntimeException e){
             e.printStackTrace();
         }
+    }
 
-        return surveyResponse;
+    public static void loadBreakingNews(){
+        try{
+            String res = Function.excuteGet(Endpoints.SERVER_URL+"breakingnews", "");
+            if(res != null && res.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of wish message
+                    SplashActivity.breakingNewsList.clear();
+
+                    JSONObject jsonResponse = new JSONObject(res);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("breakingnews");
+
+                    // only proceed if breaking news is returned
+                    if(jsonArray != null){
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            BreakingNews bnewsModel = new BreakingNews();
+
+                            bnewsModel.setId(jsonObject.getString("id"));
+                            bnewsModel.setMessage(jsonObject.getString("newsflash"));
+                            bnewsModel.setPublished_at(jsonObject.getString("published_at"));
+                            bnewsModel.setPushed_at(jsonObject.getString("pushed_at"));
+
+                            // check if the breaking news is from today's
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
+                            Date published_at = sdf.parse(jsonObject.getString("published_at"));
+                            Date date = new Date();
+                            String today = sdf.format(date);
+                            Date datetoday = sdf.parse(today);
+
+                            // only add into main object if the news was published today
+                            if(published_at.equals(datetoday)){
+                                SplashActivity.breakingNewsList.add(i, bnewsModel);
+                            }
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                catch (ParseException p) {
+                    p.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
     }
 }

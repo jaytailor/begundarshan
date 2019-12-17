@@ -2,12 +2,10 @@ package com.jayt.begundarshan.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
 import android.app.Activity;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,8 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
@@ -39,12 +36,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.youtubeVideos = youtubeVideos;
     }
 
+    private String youtubekey = "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70";
+
     @Override
     public void onBindViewHolder(final VideoViewHolder holder, final int position) {
 
         videoTitle.setText(youtubeVideos.get(position).getTitle());
 
-        String fullVideoThumbnail = "http://img.youtube.com/vi/" +youtubeVideos.get(position).getUrl()+ "/hqdefault.jpg";
+        String fullVideoThumbnail = "https://img.youtube.com/vi/" +youtubeVideos.get(position).getUrl()+ "/0.jpg";
         Picasso.with(ctx)
                 .load(fullVideoThumbnail).fit()
                 .into(playButton);
@@ -62,7 +61,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             }
         };
 
-        holder.youTubeThumbnailView.initialize("AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70", new YouTubeThumbnailView.OnInitializedListener() {
+        holder.youTubeThumbnailView.initialize(youtubekey, new YouTubeThumbnailView.OnInitializedListener() {
             @Override
             public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
@@ -82,7 +81,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     @Override
     public VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_video, parent, false);
-
         return new VideoViewHolder(view);
     }
 
@@ -114,7 +112,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
             if(getLayoutPosition() != -1){
                 Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) ctx,
-                        "AIzaSyCIl3Eqt3STpA0f6XuxRywkHRT8GEzpo70",
+                        youtubekey,
                         youtubeVideos.get(getLayoutPosition()).getUrl(),
                         100,     //after this time, video will start automatically
                         true,   //autoplay or not
