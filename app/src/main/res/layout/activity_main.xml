@@ -83,7 +83,19 @@
         app:tabTextColor="@color/tabTextColor"
         app:tabIndicatorColor="@color/tabIndicatorColor"
         android:background="@color/colorPrimary"/>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mainBannerAd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-4734320296886796/1755662541">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager_id"
         android:layout_width="match_parent"

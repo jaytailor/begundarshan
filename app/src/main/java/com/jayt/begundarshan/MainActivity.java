@@ -9,6 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     ViewPager vp;
     TabLayout tabLayout;
+    AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Check your internet connection", Toast.LENGTH_SHORT)
                     .show();
         }
+
+        // add admob ads
+        mAdView = MainActivity.this.findViewById(R.id.mainBannerAd);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
 
         whatsapp.setOnClickListener(new View.OnClickListener() {
