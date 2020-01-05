@@ -22,8 +22,6 @@ public class Information extends Fragment {
 
     View view;
     ImageButton bhaskar, navjyoti, jagran, patrika;
-    ImageView adsPrice;
-    private AdView mAdView;
 
     String imgForAdsPrice = "https://begundarshan.sgp1.digitaloceanspaces.com/ads/adsPrice.png";
 
@@ -35,10 +33,6 @@ public class Information extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.information, container, false);
 
-
-        mAdView = view.findViewById(R.id.adViewEditorial);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         // Find the image buttons
         bhaskar = (ImageButton) view.findViewById(R.id.dainikBhaskar);

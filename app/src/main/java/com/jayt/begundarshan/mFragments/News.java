@@ -26,7 +26,6 @@ public class News extends Fragment {
 
     // Progress Dialog
     private ProgressDialog pDialog;
-    private AdView mAdView;
 
     // swipe up to refresh
     private SwipeRefreshLayout swipeContainer;
@@ -41,11 +40,6 @@ public class News extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.news, container, false);
-
-        // add admob ads
-        mAdView = rootView.findViewById(R.id.adViewEditorial);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         newsRecyclerView = (RecyclerView) rootView.findViewById(R.id.newsRecyclerView);
         newsRecyclerView.setHasFixedSize(true);

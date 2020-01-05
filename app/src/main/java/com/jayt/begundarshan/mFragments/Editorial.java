@@ -23,7 +23,6 @@ import com.jayt.begundarshan.common.Function;
 public class Editorial extends Fragment{
 
     View view;
-    private AdView mAdView;
 
     // swipe up to refresh
     private SwipeRefreshLayout swipeContainer;
@@ -39,10 +38,6 @@ public class Editorial extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.editorial, container, false);
-
-        mAdView = view.findViewById(R.id.adViewEditorial);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.editorialView);
         recyclerView.setHasFixedSize(true);
