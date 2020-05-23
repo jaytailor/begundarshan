@@ -5,7 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ceylonlabs.imageviewpopup.ImagePopup;
+import com.google.android.gms.common.logging.Logger;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
+import com.jayt.begundarshan.common.ScrollTextView;
 import com.jayt.begundarshan.holder.BaseViewHolder;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
@@ -35,6 +42,7 @@ import com.jayt.begundarshan.model.YoutubeVideo;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import com.jayt.begundarshan.DetailsActivity;
@@ -50,7 +58,8 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     private List<? extends BaseModel> mList;
     private LayoutInflater mInflator;
 
-    private TextView newsTitle, content, published_at, surveyTitle, surveyResult, videoTitle, breakingNewsFlash;
+    private TextView newsTitle, content, published_at, surveyTitle, surveyResult, videoTitle;
+    private ScrollTextView breakingNewsFlash;
     private ImageView newsImg, mainAd, playButton;
     private ImagePopup imagePopup;
     private ImageButton yesButton, noButton;
@@ -114,15 +123,16 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
             itemView.setOnClickListener(this);
 
-            breakingNewsFlash = (TextView) itemView.findViewById(R.id.breakingNewsFlashTitle);
+            breakingNewsFlash = (ScrollTextView) itemView.findViewById(R.id.breakingNewsFlashTitle);
         }
 
         @Override
         public void bind(BreakingNews newsObject) {
 
             if(newsObject != null){
-                breakingNewsFlash.setText("ब्रेकिंग न्यूज़: " + newsObject.getMessage() + " : ब्रेकिंग न्यूज़" );
+                breakingNewsFlash.setText(newsObject.getMessage());
                 breakingNewsFlash.setSelected(true);  // Set focus to the textview
+                breakingNewsFlash.startScroll();
             }
         }
 
@@ -130,6 +140,7 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         public void onClick(View v) {
         }
     }
+
 
     public class FirstNewsViewHolder extends BaseViewHolder<FirstNewsItem> implements View.OnClickListener{
         private FirstNewsItem obj;

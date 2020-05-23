@@ -331,6 +331,14 @@ public class Function {
                 if (SplashActivity.breakingNewsList.size() > 0){
                     SplashActivity.newsList.add(0, SplashActivity.breakingNewsList.get(0));
                     numOfObj++;
+                }else{ // since there is no breaking news.
+                        // We will load regular news
+                    loadRegularNews();
+                    System.out.println("breaking news....." + SplashActivity.breakingNewsList.size() );
+                    if (SplashActivity.breakingNewsList.size() > 0) {
+                        SplashActivity.newsList.add(0, SplashActivity.breakingNewsList.get(0));
+                        numOfObj++;
+                    }
                 }
 
                 // First insert the ads at first and fifth position
@@ -556,6 +564,46 @@ public class Function {
                 }
                 catch (ParseException p) {
                     p.printStackTrace();
+                }
+            }
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+    }
+
+    // This function is just to load first five regular news and fill in breaking news list
+    // This will be used in case there is no breaking news then we will run
+    // normal news as flash
+    public static void loadRegularNews(){
+        try{
+            String res = Function.excuteGet(Endpoints.SERVER_URL+"getallnews?list=5", "");
+            if(res != null && res.length()>10){ // Just checking if not empty
+
+                try {
+                    // Make sure to clear previously populated list of wish message
+                    SplashActivity.breakingNewsList.clear();
+
+                    JSONObject jsonResponse = new JSONObject(res);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("newsitems");
+
+                    if (jsonArray.length() != 0){
+                        String newsFlash = "";
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                            // Concanate all the strings to create a single news flash
+                            newsFlash = newsFlash + jsonObject.getString("title") + ";  ";
+
+                        }
+                        newsFlash = "न्यूज़ फ़्लैश : " + newsFlash;
+                        BreakingNews bnewsModel = new BreakingNews();
+                        bnewsModel.setMessage(newsFlash);
+
+                        SplashActivity.breakingNewsList.add(0, bnewsModel);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }catch (RuntimeException e){
