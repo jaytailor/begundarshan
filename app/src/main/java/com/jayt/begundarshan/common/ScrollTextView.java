@@ -17,7 +17,7 @@ public class ScrollTextView extends AppCompatTextView {
     private Scroller mSlr;
 
     // milliseconds for a round of scrolling
-    private int mRndDuration = 500000;
+    private int mRndDuration = 100000;
 
     // the X offset when paused
     private int mXPaused = 0;

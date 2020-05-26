@@ -334,7 +334,6 @@ public class Function {
                 }else{ // since there is no breaking news.
                         // We will load regular news
                     loadRegularNews();
-                    System.out.println("breaking news....." + SplashActivity.breakingNewsList.size() );
                     if (SplashActivity.breakingNewsList.size() > 0) {
                         SplashActivity.newsList.add(0, SplashActivity.breakingNewsList.get(0));
                         numOfObj++;
@@ -385,7 +384,6 @@ public class Function {
                     firstNews.setPublished_at(jsonObject.getString("published_at"));
                     firstNews.setIs_breaking(jsonObject.getString("is_breaking"));
 
-                    System.out.println(SplashActivity.firstNewsList.size());
                     SplashActivity.firstNewsList.add(0, firstNews); // add the first news
 
                     // add it at the first position of overall news list

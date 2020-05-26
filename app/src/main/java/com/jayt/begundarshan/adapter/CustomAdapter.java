@@ -128,7 +128,6 @@ public class CustomAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void bind(BreakingNews newsObject) {
-
             if(newsObject != null){
                 breakingNewsFlash.setText(newsObject.getMessage());
                 breakingNewsFlash.setSelected(true);  // Set focus to the textview
