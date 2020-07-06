@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,11 +55,10 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         }
 
-        // add admob ads
+        // add admob banner ads
         mAdView = MainActivity.this.findViewById(R.id.mainBannerAd);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-
 
         whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override

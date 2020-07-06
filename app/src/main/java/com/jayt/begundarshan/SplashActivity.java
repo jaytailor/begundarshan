@@ -1,14 +1,10 @@
 package com.jayt.begundarshan;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
-import android.os.health.SystemHealthManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -16,22 +12,14 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import com.jayt.begundarshan.adapter.EditorialAdapter;
-import com.jayt.begundarshan.common.Endpoints;
 import com.jayt.begundarshan.common.Function;
 import com.jayt.begundarshan.interfaces.BaseModel;
 import com.jayt.begundarshan.model.AdsList;
 import com.jayt.begundarshan.model.BreakingNews;
-import com.jayt.begundarshan.model.EditorialModel;
 import com.jayt.begundarshan.model.SurveyModel;
-import com.jayt.begundarshan.model.VideosParentModel;
 import com.jayt.begundarshan.model.WishMessageParentModel;
 import com.jayt.begundarshan.model.WishMessages;
 import com.jayt.begundarshan.model.YoutubeVideo;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Vector;
