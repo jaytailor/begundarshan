@@ -1,0 +1,1 @@
+This is a project I built as a hobby app to help my town with hyper local news. This was published in app store and used by almost 1000+ people. I had to shut it down since it was hard to maintain. Keeping it public, just for reference for people in case they are interested in building android news app. 
